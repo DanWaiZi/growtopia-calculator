@@ -345,6 +345,48 @@ button:hover {
     animation: none !important;
 }
 
+/* Mobile Toggle Button - Hidden on Desktop */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: #0ea5e9;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+    .menu-toggle {
+        display: block; /* Show button on mobile */
+    }
+
+    .navbar {
+        left: -250px; /* Hide sidebar off-screen by default */
+        transition: 0.3s ease;
+        width: 250px;
+        height: 100%;
+        position: fixed;
+        z-index: 1000;
+    }
+
+    /* When the "active" class is added via JS, slide it in */
+    .navbar.active {
+        left: 0;
+    }
+
+    .container {
+        margin-left: 0 !important;
+        padding-top: 60px; /* Make room for the menu button */
+    }
+}
+
 /* --- ANIMATIONS --- */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(15px); }

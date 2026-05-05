@@ -24,7 +24,11 @@
     </style>
 </head>
 <body>
-<div class="navbar">
+    
+<!-- Mobile Menu Button -->
+<button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
+
+<div class="navbar" id="sideNav">
     <div class="navbar-title">
         <img src="image/title.png" alt="Growtopia" class="navbar-logo">
         <span class="navbar-title-text">Calculator</span>
@@ -55,6 +59,26 @@
     </div>
 
     <script>
+        function toggleMenu() {
+    const nav = document.getElementById('sideNav');
+    nav.classList.toggle('active');
+    
+    // Change button text based on state
+    const btn = document.querySelector('.menu-toggle');
+    if (nav.classList.contains('active')) {
+        btn.innerHTML = '✕ Close';
+    } else {
+        btn.innerHTML = '☰ Menu';
+    }
+}
+
+// Close menu automatically when a link is clicked
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        document.getElementById('sideNav').classList.remove('active');
+        document.querySelector('.menu-toggle').innerHTML = '☰ Menu';
+    });
+});
         // 🔧 Updated with your new Percentages
         const tackleBaitData = [
             { id: 'wiggly_worm', label: 'Wiggly Worm', image: 'wiggly_worm.png', percent: 0.30, default: '1000/1' },
