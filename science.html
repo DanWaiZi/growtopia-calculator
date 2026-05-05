@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Science Station</title>
+    <!-- 1. Include html2canvas library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        #downloadBtn {
+            display: none;
+            width: 100%;
+            background-color: #64748b;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+        #downloadBtn:hover { background-color: #475569; }
+    </style>
 </head>
 <body>
 <div class="navbar">
@@ -53,6 +71,9 @@
         </div>
 
         <button onclick="calcScience()">Calculate</button>
+        <!-- 2. Add Download Button -->
+        <button id="downloadBtn" onclick="downloadResult()">Download Result as Image</button>
+
         <p style="font-size:0.82em; color:#94a3b8; margin-top:12px; line-height:1.4;">
             Note: the percentage for each chemical drop rate is obtained from <a href="https://jscalc.io/calc/OubIbEPKk4CmLPV5" target="_blank" rel="noopener noreferrer" style="color:#7dd3fc; text-decoration:underline;">jscalc.io</a>.
         </p>
@@ -75,17 +96,15 @@
             const choiceM = document.getElementById('make_mchem').value === 'Y';
             const choiceF = document.getElementById('make_fuel').value === 'Y';
 
-            // --- Corrected Drop Rates (Sum = 1.0) ---
-            let y = stations * 0.15; // 15.0%
-            let b = stations * 0.13; // 13.0%
-            let p = stations * 0.07; // 7.0%
-            let g = stations * 0.40; // 40.0%
-            let r = stations * 0.25; // 25.0%
+            let y = stations * 0.15; 
+            let b = stations * 0.13; 
+            let p = stations * 0.07; 
+            let g = stations * 0.40; 
+            let r = stations * 0.25; 
 
             let mChem = 0;
             let fuelPacks = 0;
 
-            // 1. M-Chem Recipe: 20y, 10b, 5p
             if (choiceM) {
                 mChem = Math.floor(Math.min(y/20, b/10, p/5));
                 y -= (mChem * 20);
@@ -93,7 +112,6 @@
                 p -= (mChem * 5);
             }
 
-            // 2. Fuel Pack Recipe: 1m, 10g, 2b
             if (choiceF && mChem > 0) {
                 fuelPacks = Math.floor(Math.min(mChem, g/10, b/2));
                 mChem -= fuelPacks;
@@ -104,24 +122,61 @@
             const wlValue = fuelPacks * fuelRate;
 
             const res = document.getElementById('sci_res');
+            const dlBtn = document.getElementById('downloadBtn');
+            
             res.style.display = 'block';
+            dlBtn.style.display = 'block'; // Show download button
             
             res.innerHTML = `
-                <h3 style="text-align:center; margin-bottom:15px;">FINAL SUMMARY</h3>
-                <div class="result-item"><span>Fuel Packs:</span><span>${fuelPacks}</span></div>
-                <div class="result-item"><span>Leftover M-Chems:</span><span>${mChem}</span></div>
+                <h3 style="text-align:center; margin-bottom:15px; border-bottom: 1px solid #334155; padding-bottom: 10px;">FINAL SUMMARY</h3>
+                <div class="result-item" style="display: flex; justify-content: space-between;"><span>Fuel Packs:</span><span>${fuelPacks}</span></div>
+                <div class="result-item" style="display: flex; justify-content: space-between;"><span>Leftover M-Chems:</span><span>${mChem}</span></div>
                 <hr style="border:0; border-top:1px solid #334155; margin:10px 0;">
-                <div class="result-item"><span>Leftover Yellow:</span><span>${Math.floor(y)}</span></div>
-                <div class="result-item"><span>Leftover Blue:</span><span>${Math.floor(b)}</span></div>
-                <div class="result-item"><span>Leftover Pink:</span><span>${Math.floor(p)}</span></div>
-                <div class="result-item"><span>Leftover Green:</span><span>${Math.floor(g)}</span></div>
-                <div class="result-item"><span>Leftover Red:</span><span>${Math.floor(r)}</span></div>
-                <div class="profit-text">EST. VALUE: ${wlValue.toFixed(1)} WL</div>
+                <div class="result-item" style="display: flex; justify-content: space-between;"><span>Leftover Yellow:</span><span>${Math.floor(y)}</span></div>
+                <div class="result-item" style="display: flex; justify-content: space-between;"><span>Leftover Blue:</span><span>${Math.floor(b)}</span></div>
+                <div class="result-item" style="display: flex; justify-content: space-between;"><span>Leftover Pink:</span><span>${Math.floor(p)}</span></div>
+                <div class="result-item" style="display: flex; justify-content: space-between;"><span>Leftover Green:</span><span>${Math.floor(g)}</span></div>
+                <div class="result-item" style="display: flex; justify-content: space-between;"><span>Leftover Red:</span><span>${Math.floor(r)}</span></div>
+                <div class="profit-text" style="text-align: right; color: #4ade80; font-weight: bold; font-size: 1.2em; margin-top: 15px;">EST. VALUE: ${wlValue.toFixed(1)} WL</div>
             `;
+        }
+
+        // 3. Add Download Function
+        function downloadResult() {
+            const resultBox = document.getElementById('sci_res');
+            const exportBg = "#0f172a"; 
+
+            html2canvas(resultBox, {
+                backgroundColor: exportBg,
+                scale: 3,
+                logging: false,
+                useCORS: true,
+                onclone: (clonedDoc) => {
+                    const clonedRes = clonedDoc.getElementById('sci_res');
+                    clonedRes.style.display = 'block';
+                    clonedRes.style.background = exportBg;
+                    clonedRes.style.padding = '25px';
+                    clonedRes.style.animation = 'none';
+                    
+                    const items = clonedRes.querySelectorAll('.result-item');
+                    items.forEach(item => {
+                        item.style.opacity = '1';
+                        item.style.display = 'flex';
+                        item.style.justifyContent = 'space-between';
+                        item.style.visibility = 'visible';
+                        const currentColor = window.getComputedStyle(item).color;
+                        item.style.color = currentColor; 
+                    });
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'science_station_report.png';
+                link.href = canvas.toDataURL("image/png", 1.0);
+                link.click();
+            });
         }
     </script>
     <script>
-    // 1. Get all navigation links
     const navLinks = document.querySelectorAll('.nav-link');
     const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
 

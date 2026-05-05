@@ -325,12 +325,13 @@ button:hover {
     margin-top: 15px;
 }
 
-/* Optimization for Image Capture - Preserve Colors Version */
 .result-box {
-    background-color: #0f172a !important; 
+    display: none; /* This hides the box by default */
+    background-color: #0f172a;
     border: 1px solid #334155;
-    opacity: 1 !important;
-    display: block; 
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
 }
 
 /* Ensure child items are opaque but allow their specific colors to shine through */
