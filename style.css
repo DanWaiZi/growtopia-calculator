@@ -361,6 +361,26 @@ button:hover {
     cursor: pointer;
 }
 
+@media screen and (max-width: 768px) {
+    /* Prevents horizontal scrolling */
+    html, body {
+        overflow-x: hidden;
+    }
+
+    /* Force the container to take up the full phone width */
+    .container {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 15px;
+        box-sizing: border-box; /* Ensures padding doesn't push width over 100% */
+    }
+
+    /* Adjust the result-box or input grids if they are too wide */
+    .input-grid {
+        grid-template-columns: 1fr; /* Stack inputs vertically on phones */
+    }
+}
+
 /* Mobile Logic */
 @media screen and (max-width: 768px) {
     /* Show the button on phones */
