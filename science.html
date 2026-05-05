@@ -33,7 +33,7 @@
         <span class="subtitle">by TDoomGT</span>
     </div>
     <div class="nav-links">
-        <a href="dashboard.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
+        <a href="index.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
         <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
         <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
         <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
@@ -178,11 +178,11 @@
     </script>
     <script>
     const navLinks = document.querySelectorAll('.nav-link');
-    const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
+    const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
 
     navLinks.forEach(link => {
         const linkHref = link.getAttribute('href');
-        if (linkHref === currentPage || (currentPage === '' && linkHref === 'dashboard.html')) {
+        if (linkHref === currentPage || (currentPage === '' && linkHref === 'index.html')) {
             link.classList.add('active');
         } else {
             link.classList.remove('active');
