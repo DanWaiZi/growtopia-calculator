@@ -27,7 +27,7 @@
 <body>
     
 <!-- Mobile Menu Button -->
-<button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
+<button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
 <div class="navbar" id="sideNav">
     <div class="navbar-title">
@@ -65,8 +65,8 @@ function toggleMenu() {
     nav.classList.toggle('active');
     
     const btn = document.querySelector('.menu-toggle');
-    // Change button text so the user knows how to close it
-    btn.innerHTML = nav.classList.contains('active') ? '✕ Close' : '☰ Menu';
+    // Swaps between the hamburger icon and the X icon
+    btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
 }
 
 // Close menu automatically when a link is clicked

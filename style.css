@@ -361,75 +361,63 @@ button:hover {
     cursor: pointer;
 }
 
+/* --- COMPLETE MOBILE REPLACEMENT --- */
 @media screen and (max-width: 768px) {
-    /* Prevents horizontal scrolling */
+    /* 1. Reset body to prevent side-scrolling */
     html, body {
         overflow-x: hidden;
     }
 
-    /* Force the container to take up the full phone width */
-    .container {
-        margin-left: 0 !important;
-        width: 100% !important;
-        padding: 15px;
-        box-sizing: border-box; /* Ensures padding doesn't push width over 100% */
-    }
-
-    /* Adjust the result-box or input grids if they are too wide */
-    .input-grid {
-        grid-template-columns: 1fr; /* Stack inputs vertically on phones */
-    }
-}
-
-/* Mobile Logic */
-@media screen and (max-width: 768px) {
-    /* Show the button on phones */
-    .menu-toggle { 
-        display: block; 
-    }
-
-    /* Move the menu off-screen to the left */
-    .navbar { 
-        left: -280px; 
-        position: fixed; 
-        height: 100%; 
-    }
-
-    /* When active, slide it back to the edge */
-    .navbar.active { 
-        left: 0; 
-    }
-
-    /* Make sure the calculator doesn't get covered by the menu button */
-    .container { 
-        margin-left: 0; 
-        padding-top: 60px; 
-    }
-}
-
-@media screen and (max-width: 768px) {
-    /* Hide the sidebar off-screen by default on phones */
-    .navbar {
-        left: -280px; 
+    /* 2. Position the "☰" button in the top-left corner */
+    .menu-toggle {
+        display: block !important;
         position: fixed;
+        top: 10px;
+        left: 10px;
+        width: 45px;
+        height: 45px;
+        font-size: 24px;
+        z-index: 1100;
+        padding: 0;
+        background-color: #0ea5e9;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    /* 3. Hide the navbar off-screen to the left */
+    .navbar {
+        left: -280px !important;
+        position: fixed;
+        width: 250px;
         height: 100%;
         transition: 0.3s ease;
+        z-index: 1050;
     }
 
-    /* This class is added by your JavaScript when you click the button */
+    /* 4. Slide navbar in when active */
     .navbar.active {
-        left: 0;
+        left: 0 !important;
     }
 
-    /* Show the blue Menu button only on phones */
-    .menu-toggle {
-        display: block;
-    }
-
-    /* Reset the container so it's not pushed to the right on small screens */
+    /* 5. CENTER the container and fix the font size */
     .container {
-        margin-left: 0 !important;
-        padding-top: 60px;
+        margin: 70px auto 20px auto !important; /* Centers the box horizontally */
+        width: 92% !important;
+        max-width: none;
+        padding: 20px;
+        font-size: 1.2rem; /* Increases font for mobile readability */
+    }
+
+    /* 6. Make inputs and buttons easier to tap on a phone */
+    input, button {
+        font-size: 1.1rem !important;
+        padding: 12px !important;
+    }
+
+    .input-grid {
+        grid-template-columns: 1fr !important; /* Stacks inputs in one column */
     }
 }
 
