@@ -24,6 +24,7 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
             cursor: pointer;
         }
+
         .dashboard-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 14px 32px rgba(56, 189, 248, 0.16);
@@ -147,7 +148,21 @@
 <script>
 // Active Link Logic
 const navLinks = document.querySelectorAll('.nav-link');
-const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
+let currentPage = window.location.pathname.split('/').pop();
+
+// If the page is empty or just the folder name, default it to index.html
+if (currentPage === '' || currentPage === 'growtopia-calculator') {
+    currentPage = 'index.html';
+}
+
+navLinks.forEach(link => {
+    const linkHref = link.getAttribute('href');
+    if (linkHref === currentPage) {
+        link.classList.add('active');
+    } else {
+        link.classList.remove('active');
+    }
+});
 
 navLinks.forEach(link => {
     const linkHref = link.getAttribute('href');

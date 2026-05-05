@@ -249,15 +249,26 @@
         }
 
         // Navigation Active State Logic
-        const navLinks = document.querySelectorAll('.nav-link');
-        const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
+// 1. Find and REMOVE your old line: 
+// const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
 
-        navLinks.forEach(link => {
-            const linkHref = link.getAttribute('href');
-            if (linkHref === currentPage) {
-                link.classList.add('active');
-            }
-        });
+// 2. PASTE this smarter version in its place:
+const navLinks = document.querySelectorAll('.nav-link');
+let currentPage = window.location.pathname.split('/').pop();
+
+// This part handles GitHub's folder naming (growtopia-calculator)
+if (currentPage === '' || currentPage === 'growtopia-calculator') {
+    currentPage = 'index.html';
+}
+
+navLinks.forEach(link => {
+    const linkHref = link.getAttribute('href');
+    if (linkHref === currentPage) {
+        link.classList.add('active');
+    } else {
+        link.classList.remove('active');
+    }
+});
     </script>
     <script>
         function toggleMenu() {
