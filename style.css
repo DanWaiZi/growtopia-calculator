@@ -361,6 +361,25 @@ button:hover {
     cursor: pointer;
 }
 
+/* The Dark Background Overlay */
+.overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+    z-index: 1000; /* Behind the navbar, but above the content */
+}
+
+/* Show it only on mobile when active */
+@media screen and (max-width: 768px) {
+    .overlay.active {
+        display: block;
+    }
+}
+
 @media screen and (max-width: 768px) {
     /* 1. Prevent the page from wobbling left and right */
     html, body {
@@ -422,6 +441,66 @@ button:hover {
     .input-group {
         width: 100%;
     }
+    
+    /* Make the summary text smaller so it doesn't wrap as much */
+    .result-box {
+        padding: 15px !important;
+    }
+
+    .result-item {
+        font-size: 0.85rem !important; /* Slightly smaller text for items */
+        line-height: 1.4;
+    }
+
+    .result-item span:first-child {
+        font-weight: 500;
+    }
+
+    /* Fix the Total Revenue section at the bottom */
+    .result-item[style*="font-size: 1.2em"] {
+        font-size: 1rem !important; 
+        margin-top: 10px;
+        border-top: 1px solid #334155;
+        padding-top: 10px;
+    }
+
+    /* Ensure labels in the summary don't get squashed */
+    small {
+        display: block;
+        color: #94a3b8;
+        font-size: 0.75rem;
+    }
+
+    /* 1. Ensure the links container has no extra padding */
+    .nav-links {
+        padding: 10px 0 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Force align everything to the left */
+    }
+
+    /* 2. Fix the individual link alignment */
+    .nav-link {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center; /* Vertical center the icon and text */
+        justify-content: flex-start !important; /* Horizontal left align */
+        padding: 12px 20px !important; /* Give them consistent space */
+        text-align: left !important;
+        gap: 15px; /* Adds a clean gap between the icon and text */
+    }
+
+    /* 3. Make sure icons have a consistent width so text stays lined up */
+    .nav-link img, .nav-link i {
+        width: 24px;
+        text-align: center;
+        flex-shrink: 0; /* Prevents icons from squishing */
+    }
+}
+
+/* Remove the line from the very last item in the summary list */
+.result-item:last-child {
+    border-bottom: none !important;
 }
 
 /* --- ANIMATIONS --- */

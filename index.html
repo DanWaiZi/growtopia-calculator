@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Dashboard</title>
     <style>
@@ -74,7 +74,9 @@
     </style>
 </head>
 <body>
-<div class="navbar">
+<button class="menu-toggle" onclick="toggleMenu()">☰</button>
+<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+<div class="navbar" id="sideNav">
     <div class="navbar-title">
         <img src="image/title.png" alt="Growtopia" class="navbar-logo">
         <span class="navbar-title-text">Calculator</span>
@@ -152,5 +154,19 @@ navLinks.forEach(link => {
     }
 });
 </script>
+<script>
+function toggleMenu() {
+    const nav = document.getElementById('sideNav');
+    const overlay = document.getElementById('overlay');
+    const btn = document.querySelector('.menu-toggle');
+
+    // Toggle the 'active' class for both
+    nav.classList.toggle('active');
+    overlay.classList.toggle('active');
+
+    // Update the button icon
+    btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
+}
+    </script>
 </body>
 </html>
