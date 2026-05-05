@@ -361,63 +361,66 @@ button:hover {
     cursor: pointer;
 }
 
-/* --- COMPLETE MOBILE REPLACEMENT --- */
 @media screen and (max-width: 768px) {
-    /* 1. Reset body to prevent side-scrolling */
+    /* 1. Prevent the page from wobbling left and right */
     html, body {
         overflow-x: hidden;
+        width: 100%;
+        margin: 0;
+        padding: 0;
     }
 
-    /* 2. Position the "☰" button in the top-left corner */
+    /* 2. Fix the "☰" button position and size */
     .menu-toggle {
-        display: block !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
         position: fixed;
-        top: 10px;
-        left: 10px;
-        width: 45px;
-        height: 45px;
-        font-size: 24px;
-        z-index: 1100;
-        padding: 0;
-        background-color: #0ea5e9;
+        top: 15px;
+        left: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 28px;
+        z-index: 2000;
+        background: #0ea5e9;
         color: white;
         border: none;
-        border-radius: 8px;
-        cursor: pointer;
+        border-radius: 10px;
     }
 
-    /* 3. Hide the navbar off-screen to the left */
+    /* 3. Ensure the navbar is hidden by default */
     .navbar {
         left: -280px !important;
-        position: fixed;
         width: 250px;
-        height: 100%;
+        position: fixed;
+        height: 100vh;
+        z-index: 1500;
         transition: 0.3s ease;
-        z-index: 1050;
     }
 
-    /* 4. Slide navbar in when active */
     .navbar.active {
         left: 0 !important;
     }
 
-    /* 5. CENTER the container and fix the font size */
+    /* 4. CENTER the container and fix the scale */
     .container {
-        margin: 70px auto 20px auto !important; /* Centers the box horizontally */
-        width: 92% !important;
-        max-width: none;
+        margin: 80px auto 20px auto !important; /* Force center! */
+        width: 90% !important; /* Take up 90% of phone width */
+        max-width: 450px; /* Don't get too wide on tablets */
         padding: 20px;
-        font-size: 1.2rem; /* Increases font for mobile readability */
+        float: none !important; /* Remove any floating */
+        display: block !important;
+        font-size: 1.1rem;
     }
 
-    /* 6. Make inputs and buttons easier to tap on a phone */
-    input, button {
-        font-size: 1.1rem !important;
-        padding: 12px !important;
-    }
-
+    /* 5. Fix the input grid so images/text don't cut off */
     .input-grid {
-        grid-template-columns: 1fr !important; /* Stacks inputs in one column */
+        grid-template-columns: 1fr !important; /* One column only */
+        gap: 15px;
+    }
+
+    .input-group {
+        width: 100%;
     }
 }
 
