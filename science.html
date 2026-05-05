@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Science Station Calc</title>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-title">
+        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+        <span class="navbar-title-text">Calculator</span>
+        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+        <span class="subtitle">by TDoomGT</span>
+    </div>
+    <div class="nav-links">
+        <a href="dashboard.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
+        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
+        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
+    </div>
+</div>
+
+    <div class="container">
+        <h1>Science Station</h1>
+        
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Amount of Stations:</label>
+                <input type="number" id="sci_amt" value="5300">
+            </div>
+            <div class="input-group">
+                <label>Fuel Pack Rate (qty/wl):</label>
+                <input type="text" id="sci_fuel_rate" value="2/1">
+            </div>
+            <div class="input-group">
+                <label>Convert to M-Chem?</label>
+                <select id="make_mchem">
+                    <option value="Y">Yes</option>
+                    <option value="N">No</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Convert to Fuel?</label>
+                <select id="make_fuel">
+                    <option value="Y">Yes</option>
+                    <option value="N">No</option>
+                </select>
+            </div>
+        </div>
+
+        <button onclick="calcScience()">Calculate</button>
+        <p style="font-size:0.82em; color:#94a3b8; margin-top:12px; line-height:1.4;">
+            Note: the percentage for each chemical drop rate is obtained from <a href="https://jscalc.io/calc/OubIbEPKk4CmLPV5" target="_blank" rel="noopener noreferrer" style="color:#7dd3fc; text-decoration:underline;">jscalc.io</a>.
+        </p>
+
+        <div id="sci_res" class="result-box"></div>
+    </div>
+
+    <script>
+        function parseRatio(str) {
+            if (str.includes('/')) {
+                const p = str.split('/');
+                return parseFloat(p[1]) / parseFloat(p[0]);
+            }
+            return 1 / parseFloat(str);
+        }
+
+        function calcScience() {
+            const stations = parseFloat(document.getElementById('sci_amt').value) || 0;
+            const fuelRate = parseRatio(document.getElementById('sci_fuel_rate').value);
+            const choiceM = document.getElementById('make_mchem').value === 'Y';
+            const choiceF = document.getElementById('make_fuel').value === 'Y';
+
+            // --- Corrected Drop Rates (Sum = 1.0) ---
+            let y = stations * 0.15; // 15.0%
+            let b = stations * 0.13; // 13.0%
+            let p = stations * 0.07; // 7.0%
+            let g = stations * 0.40; // 40.0%
+            let r = stations * 0.25; // 25.0%
+
+            let mChem = 0;
+            let fuelPacks = 0;
+
+            // 1. M-Chem Recipe: 20y, 10b, 5p
+            if (choiceM) {
+                mChem = Math.floor(Math.min(y/20, b/10, p/5));
+                y -= (mChem * 20);
+                b -= (mChem * 10);
+                p -= (mChem * 5);
+            }
+
+            // 2. Fuel Pack Recipe: 1m, 10g, 2b
+            if (choiceF && mChem > 0) {
+                fuelPacks = Math.floor(Math.min(mChem, g/10, b/2));
+                mChem -= fuelPacks;
+                g -= (fuelPacks * 10);
+                b -= (fuelPacks * 2);
+            }
+
+            const wlValue = fuelPacks * fuelRate;
+
+            const res = document.getElementById('sci_res');
+            res.style.display = 'block';
+            
+            res.innerHTML = `
+                <h3 style="text-align:center; margin-bottom:15px;">FINAL SUMMARY</h3>
+                <div class="result-item"><span>Fuel Packs:</span><span>${fuelPacks}</span></div>
+                <div class="result-item"><span>Leftover M-Chems:</span><span>${mChem}</span></div>
+                <hr style="border:0; border-top:1px solid #334155; margin:10px 0;">
+                <div class="result-item"><span>Leftover Yellow:</span><span>${Math.floor(y)}</span></div>
+                <div class="result-item"><span>Leftover Blue:</span><span>${Math.floor(b)}</span></div>
+                <div class="result-item"><span>Leftover Pink:</span><span>${Math.floor(p)}</span></div>
+                <div class="result-item"><span>Leftover Green:</span><span>${Math.floor(g)}</span></div>
+                <div class="result-item"><span>Leftover Red:</span><span>${Math.floor(r)}</span></div>
+                <div class="profit-text">EST. VALUE: ${wlValue.toFixed(1)} WL</div>
+            `;
+        }
+    </script>
+    <script>
+    // 1. Get all navigation links
+    const navLinks = document.querySelectorAll('.nav-link');
+    const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
+
+    navLinks.forEach(link => {
+        const linkHref = link.getAttribute('href');
+        if (linkHref === currentPage || (currentPage === '' && linkHref === 'dashboard.html')) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+</script>
+</body>
+</html>

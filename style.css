@@ -1,0 +1,348 @@
+/* Growtopia Calculator Suite - by TDoomGT */
+
+:root {
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --accent: #38bdf8;
+    --text: #f1f5f9;
+    --success: #4ade80;
+    --danger: #f87171;
+    --border: #334155;
+}
+
+/* Ensure no jumping when switching pages */
+html {
+    overflow-y: scroll;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    padding-left: 220px;
+    padding-right: 20px;
+}
+
+/* --- NAVIGATION BAR (SIDEBAR) --- */
+.navbar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background: var(--card-bg);
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    border-right: 2px solid var(--border);
+    z-index: 1000;
+    align-items: center;
+}
+
+.navbar-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.navbar-title-text {
+    display: block;
+    margin-top: 6px;
+}
+
+.navbar-profile {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 10px auto 0;
+    border: 2px solid var(--accent);
+}
+
+.navbar-title .subtitle {
+    font-size: 0.75em;
+    color: var(--accent);
+    font-weight: normal;
+    display: block;
+}
+
+.navbar-logo {
+    height: 50px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05em;
+    transition: all 0.25s ease, box-shadow 0.25s ease;
+    padding: 8px 12px;
+    border-bottom: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.nav-link i {
+    width: 50px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+}
+
+.nav-link i img {
+    max-width: 28px;
+    max-height: 28px;
+    display: block;
+}
+
+.nav-text {
+    margin-left: 8px;
+    text-align: left;
+    font-size: 1.05em;
+}
+
+.nav-link:hover {
+    color: var(--accent);
+    background: rgba(56, 189, 248, 0.12);
+    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.12);
+    transform: translateY(-1px);
+}
+
+.nav-link.active {
+    color: var(--accent) !important;
+    opacity: 1 !important;
+    border-bottom: 2px solid var(--accent);
+    background: rgba(56, 189, 248, 0.15);
+}
+
+/* --- MAIN CONTAINER (FIXED SIZE) --- */
+.container {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 15px;
+    transition: padding 0.2s ease, border-radius 0.2s ease, box-shadow 0.2s ease;
+    
+    /* Fixed dimensions to prevent navbar movement */
+    width: 680px; 
+    min-height: 780px; 
+    
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* --- BRANDING & TITLES --- */
+.branding {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.branding h2 {
+    font-size: 1.4em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--text);
+}
+
+.branding p {
+    font-size: 0.9em;
+    color: var(--accent);
+    font-weight: bold;
+    margin: 2px 0 0 0;
+}
+
+h1 {
+    font-size: 1.1em;
+    text-align: center;
+    color: var(--text);
+    font-weight: bold;
+    margin: 10px 0 20px 0;
+    background: transparent;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+}
+
+h1 + .input-group,
+h1 + .input-grid {
+    margin-top: 20px;
+}
+
+/* --- FORM ELEMENTS --- */
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    animation: slideInLeft 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+.input-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8em;
+    margin-bottom: 5px;
+    color: #94a3b8;
+}
+
+.input-group label img {
+    width: 24px;
+    height: auto;
+    display: block;
+}
+
+.input-group input, .input-group select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    border: 1px solid var(--border);
+    background: #0f172a;
+    color: white;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    border-color: var(--accent);
+}
+
+/* --- BUTTONS --- */
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    margin-top: 10px;
+}
+
+button:hover { 
+    transform: scale(1.03);
+    background: #7dd3fc;
+}
+
+.dashboard-card a {
+    margin-top: auto;
+    align-self: flex-start;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: var(--accent);
+    color: var(--bg);
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card a:hover {
+    background: #7dd3fc;
+    box-shadow: 0 12px 30px rgba(56, 189, 248, 0.18);
+    transform: translateY(-1px);
+}
+
+.dashboard-card p {
+    margin: 0;
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-size: 0.95em;
+    min-height: 84px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 240px;
+}
+
+/* --- RESULT BOX --- */
+.result-box {
+    margin-top: 25px;
+    padding: 20px;
+    background: #0f172a;
+    border-radius: 10px;
+    border-left: 4px solid var(--accent);
+    display: none;
+    font-family: 'Consolas', monospace;
+    animation: fadeIn 0.4s ease-out;
+    min-height: 200px;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+}
+
+.profit-text {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Staggered ripples */
+.input-group:nth-child(1) { animation-delay: 0.05s; }
+.input-group:nth-child(2) { animation-delay: 0.10s; }
+.input-group:nth-child(3) { animation-delay: 0.15s; }
+.input-group:nth-child(4) { animation-delay: 0.20s; }
+.input-group:nth-child(5) { animation-delay: 0.25s; }
+.input-group:nth-child(6) { animation-delay: 0.30s; }
+.input-group:nth-child(7) { animation-delay: 0.35s; }
+.input-group:nth-child(8) { animation-delay: 0.40s; }
+.input-group:nth-child(9) { animation-delay: 0.45s; }

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Uranium Calculator</title>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-title">
+        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+        <span class="navbar-title-text">Calculator</span>
+        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+        <span class="subtitle">by TDoomGT</span>
+    </div>
+    <div class="nav-links">
+        <a href="dashboard.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
+        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
+        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
+    </div>
+</div>
+
+    <div class="container">
+        <h1>Uranium Fishing</h1>
+        <p style="text-align: center; color: var(--accent); font-size: 0.85em; margin-top: -15px; margin-bottom: 20px;">
+            Note: This calculator is specifically for <strong>Thanksgiving Rod</strong> results.
+        </p>
+        
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Amount of Baits:</label>
+                <input type="number" id="bait_amt" value="1000">
+            </div>
+            <div class="input-group">
+                <label>Bait Price (qty/wl):</label>
+                <input type="text" id="prc_bait" value="20/1">
+            </div>
+
+            <div class="input-group">
+                <label>Use Trawler?</label>
+                <select id="use_trawl">
+                    <option value="Y">Yes (8s per bait)</option>
+                    <option value="N">No (10s per bait)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Trawler Price (qty/wl):</label>
+                <input type="text" id="prc_trawl" value="1/6">
+            </div>
+
+            <div class="input-group"><label>Whizmo (qty/wl):</label><input type="text" id="prc_whizmo" value="1/3"></div>
+            <div class="input-group"><label>Brainworm (qty/wl):</label><input type="text" id="prc_brain" value="1/5"></div>
+            <div class="input-group"><label>Ooze (qty/wl):</label><input type="text" id="prc_ooze" value="1/10"></div>
+            <div class="input-group"><label>Normal Fish (qty/wl):</label><input type="text" id="prc_fish_norm" value="100/1"></div>
+            <div class="input-group"><label>Perfect Fish (qty/wl):</label><input type="text" id="prc_fish_perf" value="1/5"></div>
+            <div class="input-group"><label>Nuclear Detonator (qty/wl):</label><input type="text" id="prc_detonator" value="1/1"></div>
+        </div>
+
+        <button onclick="calcUranium()">Calculate</button>
+
+        <div id="ura_res" class="result-box"></div>
+    </div>
+
+    <script>
+        function parseRatio(str) {
+            if (str.includes('/')) {
+                const parts = str.split('/');
+                return parseFloat(parts[1]) / parseFloat(parts[0]);
+            }
+            return parseFloat(str) || 0;
+        }
+
+function calcUranium() {
+    const res = document.getElementById('ura_res');
+    
+    // Re-trigger animation
+    res.style.display = 'none';
+    res.offsetHeight; 
+    res.style.display = 'block';
+
+    const bait_amt = parseFloat(document.getElementById('bait_amt').value) || 0;
+    const trawler_choice = document.getElementById('use_trawl').value;
+    
+    // --- Time & Trawler Logic ---
+    let seconds = (trawler_choice === "Y") ? 8 * bait_amt : 10 * bait_amt;
+    let trawler_amount = (trawler_choice === "Y") ? 0.005 * bait_amt : 0;
+    let total_trawler_wl = trawler_amount * parseRatio(document.getElementById('prc_trawl').value);
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remain_seconds = seconds % 60;
+
+    // --- Expenses ---
+    const total_bait_wl = bait_amt * parseRatio(document.getElementById('prc_bait').value);
+    const detonator_qty = Math.floor(bait_amt * 0.05); // Calculate actual quantity
+    const total_detonator_wl = detonator_qty * parseRatio(document.getElementById('prc_detonator').value);
+    const total_expenses = total_bait_wl + total_trawler_wl + total_detonator_wl;
+
+    // --- Uranium Drops (Quantities) ---
+    const qtyWhiz = Math.floor(bait_amt * 0.005);
+    const qtyBrain = Math.floor(bait_amt * 0.03);
+    const qtyOoze = Math.floor(bait_amt * 0.03);
+
+    // --- Uranium Drops (Values) ---
+    const valWhiz = qtyWhiz * parseRatio(document.getElementById('prc_whizmo').value);
+    const valBrain = qtyBrain * parseRatio(document.getElementById('prc_brain').value);
+    const valOoze = qtyOoze * parseRatio(document.getElementById('prc_ooze').value);
+
+    // --- 93.5% Fish ---
+    const total_fish_qty = Math.floor(bait_amt * 0.935);
+    const qtyFishNorm = Math.floor(total_fish_qty * 0.99);
+    const qtyFishPerf = Math.floor(total_fish_qty * 0.01);
+
+    const valFishNorm = qtyFishNorm * parseRatio(document.getElementById('prc_fish_norm').value);
+    const valFishPerf = qtyFishPerf * parseRatio(document.getElementById('prc_fish_perf').value);
+    const total_fish_val = valFishNorm + valFishPerf;
+
+    const net_profit = (valWhiz + valBrain + valOoze + total_fish_val) - total_expenses;
+
+res.innerHTML = `
+        <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px;">FINAL SUMMARY</h3>
+        
+        <!-- Time Section -->
+        <div class="result-item" style="color: #38bdf8;">
+            <span>Total Time:</span><span>${hours}h ${minutes}m ${remain_seconds}s</span>
+        </div>
+        
+        <br>
+        
+        <!-- Expenses Section (Broken Down) -->
+        <div class="result-item" style="font-weight: bold; color: var(--danger);">
+            <span>TOTAL EXPENSES:</span><span>${total_expenses.toFixed(1)} WL</span>
+        </div>
+        <div class="result-item" style="padding-left: 15px; font-size: 0.9em; opacity: 0.8;">
+            <span>• Baits (${bait_amt}):</span><span>${total_bait_wl.toFixed(1)} WL</span>
+        </div>
+        <div class="result-item" style="padding-left: 15px; font-size: 0.9em; opacity: 0.8;">
+            <span>• Trawler (${trawler_amount.toFixed(1)}):</span><span>${total_trawler_wl.toFixed(1)} WL</span>
+        </div>
+        <div class="result-item" style="padding-left: 15px; font-size: 0.9em; opacity: 0.8;">
+            <span>• Detonators (${detonator_qty}):</span><span>${total_detonator_wl.toFixed(1)} WL</span>
+        </div>
+        
+        <br>
+
+        <!-- Income/Drops Section -->
+        <div class="result-item" style="font-weight: bold; color: var(--success);">
+            <span>TOTAL INCOME:</span><span>${(valWhiz + valBrain + valOoze + total_fish_val).toFixed(1)} WL</span>
+        </div>
+        <div class="result-item"><span>Brain Worms (~${qtyBrain}):</span><span>${valBrain.toFixed(1)} WL</span></div>
+        <div class="result-item"><span>Wizmo Gizmo (~${qtyWhiz}):</span><span>${valWhiz.toFixed(1)} WL</span></div>
+        <div class="result-item"><span>Ooze (~${qtyOoze}):</span><span>${valOoze.toFixed(1)} WL</span></div>
+        <div class="result-item"><span>Normal Fish (~${qtyFishNorm}):</span><span>${valFishNorm.toFixed(1)} WL</span></div>
+        <div class="result-item"><span>Perfect Fish (~${qtyFishPerf}):</span><span>${valFishPerf.toFixed(1)} WL</span></div>
+        
+        <hr style="border:0; border-top:1px solid #334155; margin:10px 0;">
+        
+        <div class="result-item" style="color: ${net_profit >= 0 ? '#4ade80' : '#f87171'}; font-weight: bold; font-size: 1.2em;">
+            <span>NET PROFIT:</span><span>${net_profit.toFixed(1)} WL</span>
+        </div>
+    `;
+}
+    </script>
+    <script>
+    // 1. Get all navigation links
+    const navLinks = document.querySelectorAll('.nav-link');
+    const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
+
+    navLinks.forEach(link => {
+        const linkHref = link.getAttribute('href');
+        if (linkHref === currentPage || (currentPage === '' && linkHref === 'dashboard.html')) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+</script>
+</body>
+</html>

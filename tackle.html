@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Tackle Box Calc</title>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-title">
+        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+        <span class="navbar-title-text">Calculator</span>
+        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+        <span class="subtitle">by TDoomGT</span>
+    </div>
+    <div class="nav-links">
+        <a href="dashboard.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
+        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
+        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
+    </div>
+</div>
+
+    <div class="container">
+        <h1>Tackle Box</h1>
+        <div class="input-group">
+            <label>Amount of Boxes</label>
+            <input type="number" id="tack_amt" value="100">
+        </div>
+        <div id="tackle_price_inputs" class="input-grid"></div>
+        <button onclick="calcTackle()">Calculate</button>
+        <div id="tack_res" class="result-box"></div>
+    </div>
+
+    <script>
+        const tackleBaitData = [
+            { id: 'wiggly_worm', label: 'Wiggly Worm', image: 'wiggly_worm.png', count: 2604, default: '30/1' },
+            { id: 'shiny_flashy_thing', label: 'Shiny Flashy Thing', image: 'shiny_flashy_thing.png', count: 2014, default: '25/1' },
+            { id: 'salmon_eggs', label: 'Salmon Eggs', image: 'salmon_eggs.png', count: 1791, default: '20/1' },
+            { id: 'fishing_fly', label: 'Fishing Fly', image: 'fishing_fly.png', count: 1041, default: '15/1' },
+            { id: 'shrimp_lure', label: 'Shrimp Lure', image: 'shrimp_lure.png', count: 566, default: '1/2' },
+            { id: 'mega_pellet', label: 'Mega Pellet', image: 'mega-pellet_bait.png', count: 273, default: '1/3' },
+            { id: 'uranium_lure', label: 'Uranium Lure', image: 'uranium_glowing_lure.png', count: 233, default: '1/3' }
+        ];
+
+        const inputDiv = document.getElementById('tackle_price_inputs');
+        tackleBaitData.forEach(bait => {
+            inputDiv.innerHTML += `<div class="input-group"><label><img src="image/tackle_box/${bait.image}" alt="${bait.label}">${bait.label}</label><input type="text" id="tack_pr_${bait.id}" value="${bait.default}"></div>`;
+        });
+
+        function parseRatio(str) {
+            if (str.includes('/')) {
+                const p = str.split('/');
+                return parseFloat(p[1]) / parseFloat(p[0]);
+            }
+            return 1 / parseFloat(str);
+        }
+
+        function calcTackle() {
+            const amt = parseFloat(document.getElementById('tack_amt').value) || 0;
+            let totalWL = 0, html = "";
+            tackleBaitData.forEach(bait => {
+                const price = parseRatio(document.getElementById(`tack_pr_${bait.id}`).value);
+                const expected = Math.floor((bait.count / 5945) * amt);
+                const value = expected * price;
+                totalWL += value;
+                if (expected > 0) html += `<div class="result-item"><span>${bait.label}</span><span>~${expected} (${value.toFixed(1)} WL)</span></div>`;
+            });
+            const res = document.getElementById('tack_res');
+            res.style.display = 'block';
+            res.innerHTML = `<h3>Results:</h3>${html}<div class="profit-text">TOTAL: ${totalWL.toFixed(2)} WL</div>`;
+        }
+    </script>
+    <script>
+    // 1. Get all navigation links
+    const navLinks = document.querySelectorAll('.nav-link');
+    const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
+
+    navLinks.forEach(link => {
+        const linkHref = link.getAttribute('href');
+        if (linkHref === currentPage || (currentPage === '' && linkHref === 'dashboard.html')) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+</script>
+</body>
+</html>

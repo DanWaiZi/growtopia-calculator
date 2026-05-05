@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Pepper Simulator</title>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-title">
+        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+        <span class="navbar-title-text">Calculator</span>
+        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+        <span class="subtitle">by TDoomGT</span>
+    </div>
+    <div class="nav-links">
+        <a href="dashboard.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
+        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
+        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
+    </div>
+</div>
+
+    <div class="container">
+        <h1 class="pepper-accent">Pepper Recycling</h1>
+        <p style="text-align: center; color: #94a3b8; font-size: 0.85em; margin-top: -15px; margin-bottom: 20px;">
+            Recycling Block Analysis & Gem Probability
+        </p>
+        
+        <div class="input-grid" style="grid-template-columns: 1fr;">
+            <div class="input-group">
+                <label>Number of Pepper Blocks:</label>
+                <input type="number" id="block_input" value="100" min="1">
+            </div>
+        </div>
+
+        <button onclick="simulateRecycle()">Calculate</button>
+
+        <div id="pep_res" class="result-box"></div>
+    </div>
+
+    <script>
+        function simulateRecycle() {
+            const resBox = document.getElementById('pep_res');
+            const blocks = parseInt(document.getElementById('block_input').value) || 0;
+
+            if (blocks <= 0) return alert("Please enter a valid amount of blocks!");
+
+            // Re-trigger animation
+            resBox.style.display = 'none';
+            resBox.offsetHeight; 
+            resBox.style.display = 'block';
+
+            let totalGems = 0;
+            let luckyBreaks = 0;
+            let gemsList = [];
+
+            // Simulation Loop
+            for (let i = 0; i < blocks; i++) {
+                let gems = Math.floor(Math.random() * 13); // 0 to 12
+                totalGems += gems;
+                gemsList.push(gems);
+                if (gems === 12) luckyBreaks++;
+            }
+
+            const avgGems = (totalGems / blocks).toFixed(2);
+
+            resBox.innerHTML = `
+                <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px;">FINAL SUMMARY</h3>
+                
+                <div class="result-item"><span>Blocks Processed:</span><span>${blocks}</span></div>
+                <div class="result-item"><span>Total Gems:</span><span>${totalGems}</span></div>
+                <div class="result-item" style="color: #fb923c;"><span>Average Gems/Block:</span><span>${avgGems}</span></div>
+                <div class="result-item" style="color: #4ade80;"><span>Lucky Breaks (12g):</span><span>${luckyBreaks}</span></div>
+                
+                <hr style="border:0; border-top:1px solid #334155; margin:10px 0;">
+                
+                <p style="font-size: 0.8em; color: #94a3b8; margin-bottom: 5px;">Probability Analysis:</p>
+                <div class="gem-bar">
+                    <div class="gem-progress" style="width: ${(avgGems / 12 * 100).toFixed(1)}%"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size: 0.7em; margin-top:5px;">
+                    <span>Efficiency: ${(avgGems / 12 * 100).toFixed(1)}%</span>
+                    <span>Max Potential: 12g</span>
+                </div>
+
+                <div style="margin-top: 15px; text-align: center;">
+                    <button onclick="this.parentElement.nextElementSibling.style.display='block'" 
+                            style="background: transparent; border: 1px solid #334155; color: #94a3b8; padding: 5px; font-size: 0.8em;">
+                        Show Raw Data
+                    </button>
+                </div>
+                
+                <div id="raw_data" style="display:none; margin-top:10px; max-height: 150px; overflow-y: auto; font-size: 0.8em; border-top: 1px solid #334155; padding-top: 10px;">
+                    ${gemsList.map((g, i) => `<div>Block ${i+1}: ${g} gems</div>`).join('')}
+                </div>
+            `;
+        }
+    </script>
+    <script>
+    // 1. Get all navigation links
+    const navLinks = document.querySelectorAll('.nav-link');
+    const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
+
+    navLinks.forEach(link => {
+        const linkHref = link.getAttribute('href');
+        if (linkHref === currentPage || (currentPage === '' && linkHref === 'dashboard.html')) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Autoclave Calculator</title>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-title">
+        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+        <span class="navbar-title-text">Calculator</span>
+        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+        <span class="subtitle">by TDoomGT</span>
+    </div>
+    <div class="nav-links">
+        <a href="dashboard.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
+        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
+        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
+    </div>
+</div>
+
+    <div class="container">
+        <h1>Autoclave Calculator</h1>
+        <p style="text-align: center; color: #94a3b8; font-size: 0.85em; margin-top: -15px; margin-bottom: 20px;">
+            Enter quantities for each surgical tool.
+        </p>
+
+        <div class="input-group">
+            <label>Starting Surgical Stitches</label>
+            <input type="number" id="start_stitches" value="0" min="0">
+        </div>
+        <div class="input-group">
+            <label>Surgical Price (qty)/(price)</label>
+            <input type="text" id="surgical_price" value="0/1" placeholder="e.g., 20/1.50">
+        </div>
+        <div class="input-group">
+            <label>Surgical Stitches Price (qty)/(price)</label>
+            <input type="text" id="stitches_price" value="0/1" placeholder="e.g., 20/1.50">
+        </div>
+        <div class="input-group">
+            <label>Apply to All Tools</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="bulk_amount" value="0" min="0" style="flex: 1;">
+                <button onclick="applyBulkAmount()" style="width: 100px; margin: 0; padding: 10px;">Apply</button>
+            </div>
+        </div>
+        <div id="autoclave_inputs" class="input-grid"></div>
+        <button onclick="calcAutoclave()">Calculate</button>
+        <div id="auto_res" class="result-box"></div>
+    </div>
+
+    <script>
+        const autoclaveTools = [
+            { id: 'surgical_antibiotics', label: 'Surgical Antibiotics', default: '0' },
+            { id: 'surgical_antiseptic', label: 'Surgical Antiseptic', default: '0' },
+            { id: 'surgical_clamp', label: 'Surgical Clamp', default: '0' },
+            { id: 'surgical_scalpel', label: 'Surgical Scalpel', default: '0' },
+            { id: 'surgical_sponge', label: 'Surgical Sponge', default: '0' },
+            { id: 'surgical_anesthetic', label: 'Surgical Anesthetic', default: '0' },
+            { id: 'surgical_splint', label: 'Surgical Splint', default: '0' },
+            { id: 'surgical_defibrillator', label: 'Surgical Defibrillator', default: '0' },
+            { id: 'surgical_pins', label: 'Surgical Pins', default: '0' },
+            { id: 'surgical_lab_kit', label: 'Surgical Lab Kit', default: '0' },
+            { id: 'surgical_transfusion', label: 'Surgical Transfusion', default: '0' }
+        ];
+
+        const autoInputDiv = document.getElementById('autoclave_inputs');
+        autoclaveTools.forEach(tool => {
+            autoInputDiv.innerHTML += `<div class="input-group"><label>${tool.label}</label><input type="number" id="auto_${tool.id}" value="${tool.default}" min="0"></div>`;
+        });
+
+        function parseQtyPrice(str) {
+            const parts = str.split('/').map(item => item.trim());
+            const qty = parseInt(parts[0], 10) || 0;
+            const price = parseFloat(parts[1]) || 0;
+            return { qty, price };
+        }
+
+        function formatNumber(num) {
+            if (Number.isInteger(num)) {
+                return num.toString();
+            }
+            return num.toFixed(2).replace(/\.?0+$/, '');
+        }
+
+        function applyBulkAmount() {
+            const amount = parseInt(document.getElementById('bulk_amount').value, 10) || 0;
+            autoclaveTools.forEach(tool => {
+                document.getElementById(`auto_${tool.id}`).value = amount;
+            });
+        }
+
+        function calcAutoclave() {
+            const startStitches = parseInt(document.getElementById('start_stitches').value, 10) || 0;
+            const { price: toolPrice } = parseQtyPrice(document.getElementById('surgical_price').value);
+            const { qty: stitchesQty, price: stitchesPrice } = parseQtyPrice(document.getElementById('stitches_price').value);
+            const pricePerStitch = stitchesQty > 0 ? stitchesPrice / stitchesQty : stitchesPrice;
+
+            let totalToolCost = 0;
+            const toolCounts = {};
+
+            autoclaveTools.forEach(tool => {
+                const qty = parseInt(document.getElementById(`auto_${tool.id}`).value, 10) || 0;
+                toolCounts[tool.id] = qty;
+                totalToolCost += qty * toolPrice;
+            });
+
+            let stitches = startStitches;
+            let conversionMade = true;
+            while (conversionMade) {
+                conversionMade = false;
+                let toolToConvert = null;
+                let maxCount = 19;
+
+                autoclaveTools.forEach(tool => {
+                    const count = toolCounts[tool.id];
+                    if (count > maxCount) {
+                        maxCount = count;
+                        toolToConvert = tool.id;
+                    }
+                });
+
+                if (toolToConvert) {
+                    conversionMade = true;
+                    toolCounts[toolToConvert] -= 20;
+                    stitches += 1;
+                    autoclaveTools.forEach(tool => {
+                        if (tool.id !== toolToConvert) {
+                            toolCounts[tool.id] += 1;
+                        }
+                    });
+                }
+            }
+
+            const totalStitchesCost = stitches * pricePerStitch;
+            const estimateProfit = totalStitchesCost - totalToolCost;
+
+            const res = document.getElementById('auto_res');
+            res.style.display = 'block';
+            res.innerHTML = `
+                <h3>Results:</h3>
+                <div class="result-item"><span>Final Surgical Stitches</span><span>${stitches}</span></div>
+                <div class="result-item"><span>Total Tool Cost</span><span>${formatNumber(totalToolCost)} WL</span></div>
+                <div class="result-item"><span>Total Stitches Cost</span><span>${formatNumber(totalStitchesCost)} WL</span></div>
+                <div class="result-item" style="color: ${estimateProfit >= 0 ? '#4ade80' : '#f87171'}; font-weight: bold;"><span>Estimate Profit</span><span>${formatNumber(estimateProfit)} WL</span></div>
+            `;
+        }
+    </script>
+    <script>
+    const navLinks = document.querySelectorAll('.nav-link');
+    const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
+    navLinks.forEach(link => {
+        const linkHref = link.getAttribute('href');
+        if (linkHref === currentPage || (currentPage === '' && linkHref === 'dashboard.html')) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+    </script>
+</body>
+</html>
