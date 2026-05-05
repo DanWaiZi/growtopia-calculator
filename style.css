@@ -361,29 +361,29 @@ button:hover {
     cursor: pointer;
 }
 
-/* Mobile Styles */
+/* Mobile Logic */
 @media screen and (max-width: 768px) {
-    .menu-toggle {
-        display: block; /* Show button on mobile */
+    /* Show the button on phones */
+    .menu-toggle { 
+        display: block; 
     }
 
-    .navbar {
-        left: -250px; /* Hide sidebar off-screen by default */
-        transition: 0.3s ease;
-        width: 250px;
-        height: 100%;
-        position: fixed;
-        z-index: 1000;
+    /* Move the menu off-screen to the left */
+    .navbar { 
+        left: -280px; 
+        position: fixed; 
+        height: 100%; 
     }
 
-    /* When the "active" class is added via JS, slide it in */
-    .navbar.active {
-        left: 0;
+    /* When active, slide it back to the edge */
+    .navbar.active { 
+        left: 0; 
     }
 
-    .container {
-        margin-left: 0 !important;
-        padding-top: 60px; /* Make room for the menu button */
+    /* Make sure the calculator doesn't get covered by the menu button */
+    .container { 
+        margin-left: 0; 
+        padding-top: 60px; 
     }
 }
 

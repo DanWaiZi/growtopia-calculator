@@ -59,17 +59,13 @@
     </div>
 
     <script>
-        function toggleMenu() {
+function toggleMenu() {
     const nav = document.getElementById('sideNav');
     nav.classList.toggle('active');
     
-    // Change button text based on state
     const btn = document.querySelector('.menu-toggle');
-    if (nav.classList.contains('active')) {
-        btn.innerHTML = '✕ Close';
-    } else {
-        btn.innerHTML = '☰ Menu';
-    }
+    // Change button text so the user knows how to close it
+    btn.innerHTML = nav.classList.contains('active') ? '✕ Close' : '☰ Menu';
 }
 
 // Close menu automatically when a link is clicked
