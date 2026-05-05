@@ -387,6 +387,32 @@ button:hover {
     }
 }
 
+@media screen and (max-width: 768px) {
+    /* Hide the sidebar off-screen by default on phones */
+    .navbar {
+        left: -280px; 
+        position: fixed;
+        height: 100%;
+        transition: 0.3s ease;
+    }
+
+    /* This class is added by your JavaScript when you click the button */
+    .navbar.active {
+        left: 0;
+    }
+
+    /* Show the blue Menu button only on phones */
+    .menu-toggle {
+        display: block;
+    }
+
+    /* Reset the container so it's not pushed to the right on small screens */
+    .container {
+        margin-left: 0 !important;
+        padding-top: 60px;
+    }
+}
+
 /* --- ANIMATIONS --- */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(15px); }
