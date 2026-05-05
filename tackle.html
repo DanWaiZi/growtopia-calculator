@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Tackle Box</title>
     <!-- 1. Library Integration -->
@@ -21,28 +22,38 @@
             margin-top: 10px;
             transition: background 0.3s ease;
         }
-        #downloadBtn:hover { background-color: #475569; }
+
+        #downloadBtn:hover {
+            background-color: #475569;
+        }
     </style>
 </head>
+
 <body>
-<button class="menu-toggle" onclick="toggleMenu()">☰</button>
-<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
-<div class="navbar" id="sideNav">
-    <div class="navbar-title">
-        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
-        <span class="navbar-title-text">Calculator</span>
-        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
-        <span class="subtitle">by TDoomGT</span>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+    <div class="navbar" id="sideNav">
+        <div class="navbar-title">
+            <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+            <span class="navbar-title-text">Calculator</span>
+            <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+            <span class="subtitle">by TDoomGT</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
+            <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png"
+                        alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+            <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png"
+                        alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+            <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png"
+                        alt="Science"></i><span class="nav-text">Science Station</span></a>
+            <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png"
+                        alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+            <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img
+                        src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span
+                    class="nav-text">Autoclave</span></a>
+        </div>
     </div>
-    <div class="nav-links">
-        <a href="index.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
-        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
-        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
-        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
-        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
-        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
-    </div>
-</div>
 
     <div class="container">
         <h1>Tackle Box</h1>
@@ -58,26 +69,26 @@
     </div>
 
     <script>
-function toggleMenu() {
-    const nav = document.getElementById('sideNav');
-    const overlay = document.getElementById('overlay');
-    const btn = document.querySelector('.menu-toggle');
+        function toggleMenu() {
+            const nav = document.getElementById('sideNav');
+            const overlay = document.getElementById('overlay');
+            const btn = document.querySelector('.menu-toggle');
 
-    // Toggle the 'active' class for both
-    nav.classList.toggle('active');
-    overlay.classList.toggle('active');
+            // Toggle the 'active' class for both
+            nav.classList.toggle('active');
+            overlay.classList.toggle('active');
 
-    // Update the button icon
-    btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
-}
+            // Update the button icon
+            btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
+        }
 
-// Close menu automatically when a link is clicked
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-        document.getElementById('sideNav').classList.remove('active');
-        document.querySelector('.menu-toggle').innerHTML = '☰ Menu';
-    });
-});
+        // Close menu automatically when a link is clicked
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('sideNav').classList.remove('active');
+                document.querySelector('.menu-toggle').innerHTML = '☰ Menu';
+            });
+        });
         // 🔧 Updated with your new Percentages
         const tackleBaitData = [
             { id: 'wiggly_worm', label: 'Wiggly Worm', image: 'wiggly_worm.png', percent: 0.30, default: '1000/1' },
@@ -115,7 +126,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
                 totalWL += value;
 
                 if (expected > 0) {
-html += `
+                    html += `
 <div class="result-item" style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #334155;">
     <span style="font-weight: bold; color: #94a3b8;">${bait.label} <small>(${(bait.percent * 100).toFixed(0)}%)</small></span>
     <span style="text-align: right; color: white;">~${expected} qty <br> <b style="color:#4ade80">(${value.toFixed(1)} WL)</b></span>
@@ -138,7 +149,7 @@ html += `
         // 3. Robust Download Logic
         function downloadResult() {
             const resultBox = document.getElementById('tack_res');
-            const exportBg = "#0f172a"; 
+            const exportBg = "#0f172a";
 
             html2canvas(resultBox, {
                 backgroundColor: exportBg,
@@ -151,7 +162,7 @@ html += `
                     clonedRes.style.background = exportBg;
                     clonedRes.style.padding = '25px';
                     clonedRes.style.animation = 'none';
-                    
+
                     const items = clonedRes.querySelectorAll('.result-item');
                     items.forEach(item => {
                         item.style.opacity = '1';
@@ -159,7 +170,7 @@ html += `
                         item.style.justifyContent = 'space-between';
                         item.style.visibility = 'visible';
                         const currentColor = window.getComputedStyle(item).color;
-                        item.style.color = currentColor; 
+                        item.style.color = currentColor;
                     });
                 }
             }).then(canvas => {
@@ -178,4 +189,5 @@ html += `
         });
     </script>
 </body>
+
 </html>

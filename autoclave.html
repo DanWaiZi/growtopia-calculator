@@ -1,182 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Autoclave</title>
+    <title>Autoclave Calculator</title>
+    <!-- 1. Library Integration -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        #downloadBtn {
+            display: none;
+            width: 100%;
+            background-color: #64748b;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        #downloadBtn:hover {
+            background-color: #475569;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Fixed Result Box Styling to prevent transparency */
+        .result-box {
+            display: none;
+            background-color: #0f172a !important; /* Forces solid dark blue */
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            color: white;
+        }
+    </style>
 </head>
+
 <body>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
-<div class="navbar" id="sideNav">
-    <div class="navbar-title">
-        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
-        <span class="navbar-title-text">Calculator</span>
-        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
-        <span class="subtitle">by TDoomGT</span>
+    
+    <!-- Sidebar Navigation -->
+    <div class="navbar" id="sideNav">
+        <div class="navbar-title">
+            <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+            <span class="navbar-title-text">Calculator</span>
+            <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+            <span class="subtitle">by TDoomGT</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
+            <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+            <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+            <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
+            <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+            <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
+        </div>
     </div>
-    <div class="nav-links">
-        <a href="dashboard.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
-        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
-        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
-        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
-        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
-        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
-    </div>
-</div>
+
     <div class="container">
         <h1>Autoclave Calculator</h1>
-        <p style="text-align: center; color: #94a3b8; font-size: 0.85em; margin-top: -15px; margin-bottom: 20px;">
-            Enter quantities for each surgical tool.
-        </p>
-
+        
         <div class="input-group">
             <label>Starting Surgical Stitches</label>
             <input type="number" id="start_stitches" value="0" min="0">
         </div>
         <div class="input-group">
             <label>Surgical Price (qty)/(price)</label>
-            <input type="text" id="surgical_price" value="0/1" placeholder="e.g., 20/1.50">
+            <input type="text" id="surgical_price" value="20/1" placeholder="e.g., 20/1">
         </div>
         <div class="input-group">
             <label>Surgical Stitches Price (qty)/(price)</label>
-            <input type="text" id="stitches_price" value="0/1" placeholder="e.g., 20/1.50">
+            <input type="text" id="stitches_price" value="1/1" placeholder="e.g., 1/1">
         </div>
+
         <div class="input-group">
             <label>Apply to All Tools</label>
             <div style="display: flex; gap: 10px;">
                 <input type="number" id="bulk_amount" value="0" min="0" style="flex: 1;">
-                <button onclick="applyBulkAmount()" style="width: 100px; margin: 0; padding: 10px;">Apply</button>
+                <button onclick="applyBulkAmount()" style="width: 100px; margin: 0; padding: 10px; background: #0ea5e9; color: white; border: none; border-radius: 8px; cursor: pointer;">Apply</button>
             </div>
         </div>
+
         <div id="autoclave_inputs" class="input-grid"></div>
-        <button onclick="calcAutoclave()">Calculate</button>
-        <div id="auto_res" class="result-box"></div>
+
+        <button onclick="calcAutoclave()" style="margin-top: 20px;">Calculate</button>
+        
+        <button id="downloadBtn" onclick="downloadResult()">Download Result as Image</button>
+        
+        <!-- Result Box with explicit inline style to fight transparency -->
+        <div id="auto_res" class="result-box" style="background-color: #0f172a;"></div>
     </div>
 
     <script>
-        const autoclaveTools = [
-            { id: 'surgical_antibiotics', label: 'Surgical Antibiotics', default: '0' },
-            { id: 'surgical_antiseptic', label: 'Surgical Antiseptic', default: '0' },
-            { id: 'surgical_clamp', label: 'Surgical Clamp', default: '0' },
-            { id: 'surgical_scalpel', label: 'Surgical Scalpel', default: '0' },
-            { id: 'surgical_sponge', label: 'Surgical Sponge', default: '0' },
-            { id: 'surgical_anesthetic', label: 'Surgical Anesthetic', default: '0' },
-            { id: 'surgical_splint', label: 'Surgical Splint', default: '0' },
-            { id: 'surgical_defibrillator', label: 'Surgical Defibrillator', default: '0' },
-            { id: 'surgical_pins', label: 'Surgical Pins', default: '0' },
-            { id: 'surgical_lab_kit', label: 'Surgical Lab Kit', default: '0' },
-            { id: 'surgical_transfusion', label: 'Surgical Transfusion', default: '0' }
-        ];
-
-        const autoInputDiv = document.getElementById('autoclave_inputs');
-        autoclaveTools.forEach(tool => {
-            autoInputDiv.innerHTML += `<div class="input-group"><label>${tool.label}</label><input type="number" id="auto_${tool.id}" value="${tool.default}" min="0"></div>`;
-        });
-
-        function parseQtyPrice(str) {
-            const parts = str.split('/').map(item => item.trim());
-            const qty = parseInt(parts[0], 10) || 0;
-            const price = parseFloat(parts[1]) || 0;
-            return { qty, price };
+        function toggleMenu() {
+            const nav = document.getElementById('sideNav');
+            const overlay = document.getElementById('overlay');
+            const btn = document.querySelector('.menu-toggle');
+            nav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
         }
 
-        function formatNumber(num) {
-            if (Number.isInteger(num)) {
-                return num.toString();
+        const autoclaveTools = [
+            { id: 'surgical_antibiotics', label: 'Surgical Antibiotics' },
+            { id: 'surgical_antiseptic', label: 'Surgical Antiseptic' },
+            { id: 'surgical_clamp', label: 'Surgical Clamp' },
+            { id: 'surgical_scalpel', label: 'Surgical Scalpel' },
+            { id: 'surgical_sponge', label: 'Surgical Sponge' },
+            { id: 'surgical_anesthetic', label: 'Surgical Anesthetic' },
+            { id: 'surgical_splint', label: 'Surgical Splint' },
+            { id: 'surgical_defibrillator', label: 'Surgical Defibrillator' },
+            { id: 'surgical_pins', label: 'Surgical Pins' },
+            { id: 'surgical_lab_kit', label: 'Surgical Lab Kit' },
+            { id: 'surgical_transfusion', label: 'Surgical Transfusion' }
+        ];
+
+        const inputContainer = document.getElementById('autoclave_inputs');
+        autoclaveTools.forEach(tool => {
+            inputContainer.innerHTML += `
+                <div class="input-group">
+                    <label>${tool.label}</label>
+                    <input type="number" id="auto_${tool.id}" value="0" min="0">
+                </div>`;
+        });
+
+        function parseRatio(str) {
+            if (str.includes('/')) {
+                const p = str.split('/');
+                return parseFloat(p[1]) / parseFloat(p[0]);
             }
-            return num.toFixed(2).replace(/\.?0+$/, '');
+            return 1 / parseFloat(str);
         }
 
         function applyBulkAmount() {
-            const amount = parseInt(document.getElementById('bulk_amount').value, 10) || 0;
+            const amount = document.getElementById('bulk_amount').value;
             autoclaveTools.forEach(tool => {
                 document.getElementById(`auto_${tool.id}`).value = amount;
             });
         }
 
         function calcAutoclave() {
-            const startStitches = parseInt(document.getElementById('start_stitches').value, 10) || 0;
-            const { price: toolPrice } = parseQtyPrice(document.getElementById('surgical_price').value);
-            const { qty: stitchesQty, price: stitchesPrice } = parseQtyPrice(document.getElementById('stitches_price').value);
-            const pricePerStitch = stitchesQty > 0 ? stitchesPrice / stitchesQty : stitchesPrice;
+            const startStitches = parseInt(document.getElementById('start_stitches').value) || 0;
+            const pricePerTool = parseRatio(document.getElementById('surgical_price').value);
+            const pricePerStitch = parseRatio(document.getElementById('stitches_price').value);
 
             let totalToolCost = 0;
-            const toolCounts = {};
+            let toolCounts = {};
 
             autoclaveTools.forEach(tool => {
-                const qty = parseInt(document.getElementById(`auto_${tool.id}`).value, 10) || 0;
+                const qty = parseInt(document.getElementById(`auto_${tool.id}`).value) || 0;
                 toolCounts[tool.id] = qty;
-                totalToolCost += qty * toolPrice;
+                totalToolCost += qty * pricePerTool;
             });
 
             let stitches = startStitches;
-            let conversionMade = true;
-            while (conversionMade) {
-                conversionMade = false;
+            let processing = true;
+            while (processing) {
                 let toolToConvert = null;
                 let maxCount = 19;
-
                 autoclaveTools.forEach(tool => {
-                    const count = toolCounts[tool.id];
-                    if (count > maxCount) {
-                        maxCount = count;
+                    if (toolCounts[tool.id] > maxCount) {
+                        maxCount = toolCounts[tool.id];
                         toolToConvert = tool.id;
                     }
                 });
 
                 if (toolToConvert) {
-                    conversionMade = true;
                     toolCounts[toolToConvert] -= 20;
                     stitches += 1;
                     autoclaveTools.forEach(tool => {
-                        if (tool.id !== toolToConvert) {
-                            toolCounts[tool.id] += 1;
-                        }
+                        if (tool.id !== toolToConvert) toolCounts[tool.id] += 1;
                     });
+                } else {
+                    processing = false;
                 }
             }
 
-            const totalStitchesCost = stitches * pricePerStitch;
-            const estimateProfit = totalStitchesCost - totalToolCost;
+            const totalRevenue = stitches * pricePerStitch;
+            const profit = totalRevenue - totalToolCost;
 
             const res = document.getElementById('auto_res');
+            const downloadBtn = document.getElementById('downloadBtn');
+
             res.style.display = 'block';
+            downloadBtn.style.display = 'block';
+
             res.innerHTML = `
-                <h3>Results:</h3>
-                <div class="result-item"><span>Final Surgical Stitches</span><span>${stitches}</span></div>
-                <div class="result-item"><span>Total Tool Cost</span><span>${formatNumber(totalToolCost)} WL</span></div>
-                <div class="result-item"><span>Total Stitches Cost</span><span>${formatNumber(totalStitchesCost)} WL</span></div>
-                <div class="result-item" style="color: ${estimateProfit >= 0 ? '#4ade80' : '#f87171'}; font-weight: bold;"><span>Estimate Profit</span><span>${formatNumber(estimateProfit)} WL</span></div>
+                <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0;">AUTOCLAVE SUMMARY</h3>
+                <div class="result-item" style="display: flex; justify-content: space-between; padding: 10px 0;">
+                    <span style="color: #94a3b8;">Final Stitches:</span> <span style="color:white;">${stitches}</span>
+                </div>
+                <div class="result-item" style="display: flex; justify-content: space-between; padding: 10px 0;">
+                    <span style="color: #94a3b8;">Total Cost:</span> <span style="color:white;">${totalToolCost.toFixed(1)} WL</span>
+                </div>
+                <div class="result-item" style="display: flex; justify-content: space-between; padding: 12px 0; border-top: 1px solid #334155; margin-top: 10px; font-weight: bold; color: ${profit >= 0 ? '#4ade80' : '#f87171'};">
+                    <span>ESTIMATE PROFIT:</span> <span>${profit.toFixed(1)} WL</span>
+                </div>
             `;
         }
-    </script>
-    <script>
-    const navLinks = document.querySelectorAll('.nav-link');
-    const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
-    navLinks.forEach(link => {
-        const linkHref = link.getAttribute('href');
-        if (linkHref === currentPage || (currentPage === '' && linkHref === 'dashboard.html')) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
+
+        function downloadResult() {
+            const resultBox = document.getElementById('auto_res');
+            const exportBg = "#0f172a"; 
+
+            html2canvas(resultBox, {
+                backgroundColor: exportBg, 
+                scale: 3,
+                logging: false,
+                useCORS: true,
+                onclone: (clonedDoc) => {
+                    const clonedRes = clonedDoc.getElementById('auto_res');
+                    clonedRes.style.display = 'block';
+                    clonedRes.style.background = exportBg;
+                    clonedRes.style.padding = '30px';
+                    clonedRes.style.borderRadius = '0px'; 
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'autoclave_report.png';
+                link.href = canvas.toDataURL("image/png", 1.0);
+                link.click();
+            });
         }
-    });
-    </script>
-    <script>
-function toggleMenu() {
-    const nav = document.getElementById('sideNav');
-    const overlay = document.getElementById('overlay');
-    const btn = document.querySelector('.menu-toggle');
 
-    // Toggle the 'active' class for both
-    nav.classList.toggle('active');
-    overlay.classList.toggle('active');
-
-    // Update the button icon
-    btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
-}
+        const navLinks = document.querySelectorAll('.nav-link');
+        const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPage) link.classList.add('active');
+        });
     </script>
 </body>
+
 </html>

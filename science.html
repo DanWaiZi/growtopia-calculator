@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Science Station</title>
     <!-- 1. Include html2canvas library -->
@@ -21,32 +22,42 @@
             margin-top: 10px;
             transition: background 0.3s ease;
         }
-        #downloadBtn:hover { background-color: #475569; }
+
+        #downloadBtn:hover {
+            background-color: #475569;
+        }
     </style>
 </head>
+
 <body>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
-<div class="navbar" id="sideNav">
-    <div class="navbar-title">
-        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
-        <span class="navbar-title-text">Calculator</span>
-        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
-        <span class="subtitle">by TDoomGT</span>
+    <div class="navbar" id="sideNav">
+        <div class="navbar-title">
+            <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+            <span class="navbar-title-text">Calculator</span>
+            <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+            <span class="subtitle">by TDoomGT</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
+            <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png"
+                        alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+            <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png"
+                        alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+            <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png"
+                        alt="Science"></i><span class="nav-text">Science Station</span></a>
+            <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png"
+                        alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+            <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img
+                        src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span
+                    class="nav-text">Autoclave</span></a>
+        </div>
     </div>
-    <div class="nav-links">
-        <a href="index.html" class="nav-link" id="nav-dashboard"><span class="nav-text">Dashboard</span></a>
-        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
-        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
-        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
-        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
-        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
-    </div>
-</div>
 
     <div class="container">
         <h1>Science Station</h1>
-        
+
         <div class="input-grid">
             <div class="input-group">
                 <label>Amount of Stations:</label>
@@ -77,7 +88,9 @@
         <button id="downloadBtn" onclick="downloadResult()">Download Result as Image</button>
 
         <p style="font-size:0.82em; color:#94a3b8; margin-top:12px; line-height:1.4;">
-            Note: the percentage for each chemical drop rate is obtained from <a href="https://jscalc.io/calc/OubIbEPKk4CmLPV5" target="_blank" rel="noopener noreferrer" style="color:#7dd3fc; text-decoration:underline;">jscalc.io</a>.
+            Note: the percentage for each chemical drop rate is obtained from <a
+                href="https://jscalc.io/calc/OubIbEPKk4CmLPV5" target="_blank" rel="noopener noreferrer"
+                style="color:#7dd3fc; text-decoration:underline;">jscalc.io</a>.
         </p>
 
         <div id="sci_res" class="result-box"></div>
@@ -98,24 +111,24 @@
             const choiceM = document.getElementById('make_mchem').value === 'Y';
             const choiceF = document.getElementById('make_fuel').value === 'Y';
 
-            let y = stations * 0.15; 
-            let b = stations * 0.13; 
-            let p = stations * 0.07; 
-            let g = stations * 0.40; 
-            let r = stations * 0.25; 
+            let y = stations * 0.15;
+            let b = stations * 0.13;
+            let p = stations * 0.07;
+            let g = stations * 0.40;
+            let r = stations * 0.25;
 
             let mChem = 0;
             let fuelPacks = 0;
 
             if (choiceM) {
-                mChem = Math.floor(Math.min(y/20, b/10, p/5));
+                mChem = Math.floor(Math.min(y / 20, b / 10, p / 5));
                 y -= (mChem * 20);
                 b -= (mChem * 10);
                 p -= (mChem * 5);
             }
 
             if (choiceF && mChem > 0) {
-                fuelPacks = Math.floor(Math.min(mChem, g/10, b/2));
+                fuelPacks = Math.floor(Math.min(mChem, g / 10, b / 2));
                 mChem -= fuelPacks;
                 g -= (fuelPacks * 10);
                 b -= (fuelPacks * 2);
@@ -125,10 +138,10 @@
 
             const res = document.getElementById('sci_res');
             const dlBtn = document.getElementById('downloadBtn');
-            
+
             res.style.display = 'block';
             dlBtn.style.display = 'block'; // Show download button
-            
+
             res.innerHTML = `
                 <h3 style="text-align:center; margin-bottom:15px; border-bottom: 1px solid #334155; padding-bottom: 10px;">FINAL SUMMARY</h3>
                 <div class="result-item" style="display: flex; justify-content: space-between;"><span>Fuel Packs:</span><span>${fuelPacks}</span></div>
@@ -146,7 +159,7 @@
         // 3. Add Download Function
         function downloadResult() {
             const resultBox = document.getElementById('sci_res');
-            const exportBg = "#0f172a"; 
+            const exportBg = "#0f172a";
 
             html2canvas(resultBox, {
                 backgroundColor: exportBg,
@@ -159,7 +172,7 @@
                     clonedRes.style.background = exportBg;
                     clonedRes.style.padding = '25px';
                     clonedRes.style.animation = 'none';
-                    
+
                     const items = clonedRes.querySelectorAll('.result-item');
                     items.forEach(item => {
                         item.style.opacity = '1';
@@ -167,7 +180,7 @@
                         item.style.justifyContent = 'space-between';
                         item.style.visibility = 'visible';
                         const currentColor = window.getComputedStyle(item).color;
-                        item.style.color = currentColor; 
+                        item.style.color = currentColor;
                     });
                 }
             }).then(canvas => {
@@ -179,31 +192,32 @@
         }
     </script>
     <script>
-    const navLinks = document.querySelectorAll('.nav-link');
-    const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
+        const navLinks = document.querySelectorAll('.nav-link');
+        const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
 
-    navLinks.forEach(link => {
-        const linkHref = link.getAttribute('href');
-        if (linkHref === currentPage || (currentPage === '' && linkHref === 'index.html')) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
+        navLinks.forEach(link => {
+            const linkHref = link.getAttribute('href');
+            if (linkHref === currentPage || (currentPage === '' && linkHref === 'index.html')) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    </script>
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('sideNav');
+            const overlay = document.getElementById('overlay');
+            const btn = document.querySelector('.menu-toggle');
+
+            // Toggle the 'active' class for both
+            nav.classList.toggle('active');
+            overlay.classList.toggle('active');
+
+            // Update the button icon
+            btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
         }
-    });
-</script>
-<script>
-function toggleMenu() {
-    const nav = document.getElementById('sideNav');
-    const overlay = document.getElementById('overlay');
-    const btn = document.querySelector('.menu-toggle');
-
-    // Toggle the 'active' class for both
-    nav.classList.toggle('active');
-    overlay.classList.toggle('active');
-
-    // Update the button icon
-    btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
-}
     </script>
 </body>
+
 </html>
