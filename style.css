@@ -325,6 +325,25 @@ button:hover {
     margin-top: 15px;
 }
 
+/* Optimization for Image Capture - Preserve Colors Version */
+.result-box {
+    background-color: #0f172a !important; 
+    border: 1px solid #334155;
+    opacity: 1 !important;
+    display: block; 
+}
+
+/* Ensure child items are opaque but allow their specific colors to shine through */
+.result-box .result-item {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* This stops animations from interfering with the screenshot */
+.html2canvas-container {
+    animation: none !important;
+}
+
 /* --- ANIMATIONS --- */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(15px); }
