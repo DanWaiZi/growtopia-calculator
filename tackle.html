@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
     <title>Tackle Box</title>
+    <!-- 1. Library Integration -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        #downloadBtn {
+            display: none;
+            width: 100%;
+            background-color: #64748b;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+        #downloadBtn:hover { background-color: #475569; }
+    </style>
 </head>
 <body>
 <div class="navbar">
@@ -31,18 +49,21 @@
         </div>
         <div id="tackle_price_inputs" class="input-grid"></div>
         <button onclick="calcTackle()">Calculate</button>
+        <!-- 2. Download Button -->
+        <button id="downloadBtn" onclick="downloadResult()">Download Result as Image</button>
         <div id="tack_res" class="result-box"></div>
     </div>
 
     <script>
+        // 🔧 Updated with your new Percentages
         const tackleBaitData = [
-            { id: 'wiggly_worm', label: 'Wiggly Worm', image: 'wiggly_worm.png', count: 2604, default: '1000/1' },
-            { id: 'shiny_flashy_thing', label: 'Shiny Flashy Thing', image: 'shiny_flashy_thing.png', count: 2014, default: '200/1' },
-            { id: 'salmon_eggs', label: 'Salmon Eggs', image: 'salmon_eggs.png', count: 1791, default: '500/1' },
-            { id: 'fishing_fly', label: 'Fishing Fly', image: 'fishing_fly.png', count: 1041, default: '20/1' },
-            { id: 'shrimp_lure', label: 'Shrimp Lure', image: 'shrimp_lure.png', count: 566, default: '1/3' },
-            { id: 'mega_pellet', label: 'Mega Pellet', image: 'mega-pellet_bait.png', count: 273, default: '16/1' },
-            { id: 'uranium_lure', label: 'Uranium Lure', image: 'uranium_glowing_lure.png', count: 233, default: '16/1' }
+            { id: 'wiggly_worm', label: 'Wiggly Worm', image: 'wiggly_worm.png', percent: 0.30, default: '1000/1' },
+            { id: 'shiny_flashy_thing', label: 'Shiny Flashy Thing', image: 'shiny_flashy_thing.png', percent: 0.25, default: '200/1' },
+            { id: 'salmon_eggs', label: 'Salmon Eggs', image: 'salmon_eggs.png', percent: 0.20, default: '500/1' },
+            { id: 'fishing_fly', label: 'Fishing Fly', image: 'fishing_fly.png', percent: 0.11, default: '20/1' },
+            { id: 'shrimp_lure', label: 'Shrimp Lure', image: 'shrimp_lure.png', percent: 0.08, default: '1/3' },
+            { id: 'mega_pellet', label: 'Mega Pellet', image: 'mega-pellet_bait.png', percent: 0.03, default: '16/1' },
+            { id: 'uranium_lure', label: 'Uranium Lure', image: 'uranium_glowing_lure.png', percent: 0.03, default: '16/1' }
         ];
 
         const inputDiv = document.getElementById('tackle_price_inputs');
@@ -60,32 +81,78 @@
 
         function calcTackle() {
             const amt = parseFloat(document.getElementById('tack_amt').value) || 0;
+            const res = document.getElementById('tack_res');
+            const downloadBtn = document.getElementById('downloadBtn');
             let totalWL = 0, html = "";
+
             tackleBaitData.forEach(bait => {
+                const expected = Math.floor(amt * bait.percent);
                 const price = parseRatio(document.getElementById(`tack_pr_${bait.id}`).value);
-                const expected = Math.floor((bait.count / 5945) * amt);
                 const value = expected * price;
                 totalWL += value;
-                if (expected > 0) html += `<div class="result-item"><span>${bait.label}</span><span>~${expected} (${value.toFixed(1)} WL)</span></div>`;
-            });
-            const res = document.getElementById('tack_res');
-            res.style.display = 'block';
-            res.innerHTML = `<h3>Results:</h3>${html}<div class="profit-text">TOTAL: ${totalWL.toFixed(2)} WL</div>`;
-        }
-    </script>
-    <script>
-    // 1. Get all navigation links
-    const navLinks = document.querySelectorAll('.nav-link');
-    const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
 
-    navLinks.forEach(link => {
-        const linkHref = link.getAttribute('href');
-        if (linkHref === currentPage || (currentPage === '' && linkHref === 'dashboard.html')) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
+                if (expected > 0) {
+                    html += `
+                    <div class="result-item" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>${bait.label} (${(bait.percent * 100).toFixed(0)}%)</span>
+                        <span>~${expected} qty (${value.toFixed(1)} WL)</span>
+                    </div>`;
+                }
+            });
+
+            res.style.display = 'block';
+            downloadBtn.style.display = 'block';
+            res.innerHTML = `
+                <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0;">TACKLE SUMMARY</h3>
+                ${html}
+                <hr style="border:0; border-top:1px solid #334155; margin:10px 0;">
+                <div class="result-item" style="display: flex; justify-content: space-between; color: #4ade80; font-weight: bold; font-size: 1.2em;">
+                    <span>TOTAL REVENUE:</span><span>${totalWL.toFixed(2)} WL</span>
+                </div>
+            `;
         }
-    });
-</script>
+
+        // 3. Robust Download Logic
+        function downloadResult() {
+            const resultBox = document.getElementById('tack_res');
+            const exportBg = "#0f172a"; 
+
+            html2canvas(resultBox, {
+                backgroundColor: exportBg,
+                scale: 3,
+                logging: false,
+                useCORS: true,
+                onclone: (clonedDoc) => {
+                    const clonedRes = clonedDoc.getElementById('tack_res');
+                    clonedRes.style.display = 'block';
+                    clonedRes.style.background = exportBg;
+                    clonedRes.style.padding = '25px';
+                    clonedRes.style.animation = 'none';
+                    
+                    const items = clonedRes.querySelectorAll('.result-item');
+                    items.forEach(item => {
+                        item.style.opacity = '1';
+                        item.style.display = 'flex';
+                        item.style.justifyContent = 'space-between';
+                        item.style.visibility = 'visible';
+                        const currentColor = window.getComputedStyle(item).color;
+                        item.style.color = currentColor; 
+                    });
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'tackle_box_report.png';
+                link.href = canvas.toDataURL("image/png", 1.0);
+                link.click();
+            });
+        }
+
+        // Navigation Active State
+        const navLinks = document.querySelectorAll('.nav-link');
+        const currentPage = (window.location.pathname.split('/').pop() || 'dashboard.html').split('?')[0];
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPage) link.classList.add('active');
+        });
+    </script>
 </body>
 </html>
