@@ -32,25 +32,31 @@
 <body>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
-<div class="navbar" id="sideNav">
-    <div class="navbar-title">
-        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
-        <span class="navbar-title-text">Calculator</span>
-        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
-        <span class="subtitle">by TDoomGT</span>
+    <div class="navbar" id="sideNav">
+        <div class="navbar-title">
+            <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+            <span class="navbar-title-text">Calculator</span>
+            <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+            <span class="subtitle">by TDoomGT</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link" id="nav-home">
+                <i><img src="image/home.png" alt="Home" style="width: 22px;"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png"
+                        alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+            <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png"
+                        alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+            <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png"
+                        alt="Science"></i><span class="nav-text">Science Station</span></a>
+            <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png"
+                        alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+            <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img
+                        src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span
+                    class="nav-text">Autoclave</span></a>
+        </div>
     </div>
-    <div class="nav-links">
-        <a href="index.html" class="nav-link" id="nav-home">
-            <i><img src="image/home.png" alt="Home" style="width: 22px;"></i>
-            <span class="nav-text">Home</span>
-        </a>
-        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
-        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
-        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
-        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
-        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
-    </div>
-</div>
 
     <div class="container">
         <h1>Science Station</h1>
@@ -189,26 +195,26 @@
         }
     </script>
     <script>
-// 1. Find and REMOVE your old line: 
-// const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
+        // 1. Find and REMOVE your old line: 
+        // const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
 
-// 2. PASTE this smarter version in its place:
-const navLinks = document.querySelectorAll('.nav-link');
-let currentPage = window.location.pathname.split('/').pop();
+        // 2. PASTE this smarter version in its place:
+        const navLinks = document.querySelectorAll('.nav-link');
+        let currentPage = window.location.pathname.split('/').pop();
 
-// This part handles GitHub's folder naming (growtopia-calculator)
-if (currentPage === '' || currentPage === 'growtopia-calculator') {
-    currentPage = 'index.html';
-}
+        // This part handles GitHub's folder naming (growtopia-calculator)
+        if (currentPage === '' || currentPage === 'growtopia-calculator') {
+            currentPage = 'index.html';
+        }
 
-navLinks.forEach(link => {
-    const linkHref = link.getAttribute('href');
-    if (linkHref === currentPage) {
-        link.classList.add('active');
-    } else {
-        link.classList.remove('active');
-    }
-});
+        navLinks.forEach(link => {
+            const linkHref = link.getAttribute('href');
+            if (linkHref === currentPage) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
     </script>
     <script>
         function toggleMenu() {

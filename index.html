@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
+
         .dashboard-card {
             background: #0f172a;
             border: 1px solid var(--border);
@@ -72,118 +74,127 @@
         }
     </style>
 </head>
+
 <body>
-<button class="menu-toggle" onclick="toggleMenu()">☰</button>
-<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
-<div class="navbar" id="sideNav">
-    <div class="navbar-title">
-        <img src="image/title.png" alt="Growtopia" class="navbar-logo">
-        <span class="navbar-title-text">Calculator</span>
-        <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
-        <span class="subtitle">by TDoomGT</span>
+    <div class="navbar" id="sideNav">
+        <div class="navbar-title">
+            <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+            <span class="navbar-title-text">Calculator</span>
+            <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+            <span class="subtitle">by TDoomGT</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link" id="nav-home">
+                <i><img src="image/home.png" alt="Home" style="width: 22px;"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png"
+                        alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
+            <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png"
+                        alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
+            <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png"
+                        alt="Science"></i><span class="nav-text">Science Station</span></a>
+            <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png"
+                        alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+            <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img
+                        src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span
+                    class="nav-text">Autoclave</span></a>
+        </div>
     </div>
-    <div class="nav-links">
-        <a href="index.html" class="nav-link" id="nav-home">
-            <i><img src="image/home.png" alt="Home" style="width: 22px;"></i>
-            <span class="nav-text">Home</span>
-        </a>
-        <a href="uranium.html" class="nav-link" id="nav-uranium"><i><img src="image/uranium_fishing/uranium_nav.png" alt="Uranium"></i><span class="nav-text">Uranium Fishing</span></a>
-        <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i><span class="nav-text">Pepper Recycling</span></a>
-        <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png" alt="Science"></i><span class="nav-text">Science Station</span></a>
-        <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
-        <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
+
+    <div class="container">
+        <h1>Home</h1>
+        <p style="text-align: center; color: #94a3b8; font-size: 0.95em; margin-top: -10px; margin-bottom: 22px;">
+            View short descriptions of each calculator and jump straight to the tool you need.
+        </p>
+
+        <div class="dashboard-grid input-group">
+            <a class="dashboard-card" href="uranium.html">
+                <div class="dashboard-card-header">
+                    <img src="image/uranium_fishing/uranium_nav.png" alt="Uranium">
+                    <h2>Uranium Fishing</h2>
+                </div>
+                <p>Estimate your uranium run earnings based on bait count, trawler usage, and current drop prices.</p>
+            </a>
+
+            <a class="dashboard-card" href="pepper.html">
+                <div class="dashboard-card-header">
+                    <img src="image/pepper_recycling/pepper_nav.png" alt="Pepper">
+                    <h2>Pepper Recycling</h2>
+                </div>
+                <p>See how many gems and efficiency results you can expect from pepper recycling activities.</p>
+            </a>
+
+            <a class="dashboard-card" href="science.html">
+                <div class="dashboard-card-header">
+                    <img src="image/science_station/science_nav.png" alt="Science">
+                    <h2>Science Station</h2>
+                </div>
+                <p>Access science station calculations and get instant results for lab-related items and values.</p>
+            </a>
+
+            <a class="dashboard-card" href="tackle.html">
+                <div class="dashboard-card-header">
+                    <img src="image/tackle_box/tackle_nav.png" alt="Tackle">
+                    <h2>Tackle Box</h2>
+                </div>
+                <p>Review tackle box item stats and pricing details to make better decisions for your runs.</p>
+            </a>
+
+            <a class="dashboard-card" href="autoclave.html">
+                <div class="dashboard-card-header">
+                    <img src="image/auto_clave/autoclave_nav.png" alt="Autoclave">
+                    <h2>Autoclave</h2>
+                </div>
+                <p>Calculate surgical tool conversions, final stitches, total cost, and profit from autoclave
+                    processing.</p>
+            </a>
+        </div>
     </div>
-</div>
 
-<div class="container">
-    <h1>Home</h1>
-    <p style="text-align: center; color: #94a3b8; font-size: 0.95em; margin-top: -10px; margin-bottom: 22px;">
-        View short descriptions of each calculator and jump straight to the tool you need.
-    </p>
+    <script>
+        // Active Link Logic
+        const navLinks = document.querySelectorAll('.nav-link');
+        let currentPage = window.location.pathname.split('/').pop();
 
-    <div class="dashboard-grid input-group">
-        <a class="dashboard-card" href="uranium.html">
-            <div class="dashboard-card-header">
-                <img src="image/uranium_fishing/uranium_nav.png" alt="Uranium">
-                <h2>Uranium Fishing</h2>
-            </div>
-            <p>Estimate your uranium run earnings based on bait count, trawler usage, and current drop prices.</p>
-        </a>
+        // If the page is empty or just the folder name, default it to index.html
+        if (currentPage === '' || currentPage === 'growtopia-calculator') {
+            currentPage = 'index.html';
+        }
 
-        <a class="dashboard-card" href="pepper.html">
-            <div class="dashboard-card-header">
-                <img src="image/pepper_recycling/pepper_nav.png" alt="Pepper">
-                <h2>Pepper Recycling</h2>
-            </div>
-            <p>See how many gems and efficiency results you can expect from pepper recycling activities.</p>
-        </a>
+        navLinks.forEach(link => {
+            const linkHref = link.getAttribute('href');
+            if (linkHref === currentPage) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
 
-        <a class="dashboard-card" href="science.html">
-            <div class="dashboard-card-header">
-                <img src="image/science_station/science_nav.png" alt="Science">
-                <h2>Science Station</h2>
-            </div>
-            <p>Access science station calculations and get instant results for lab-related items and values.</p>
-        </a>
+        navLinks.forEach(link => {
+            const linkHref = link.getAttribute('href');
+            // Ensure both index.html and root (/) trigger the Home active state
+            if (linkHref === currentPage || (currentPage === '' && linkHref === 'index.html')) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
 
-        <a class="dashboard-card" href="tackle.html">
-            <div class="dashboard-card-header">
-                <img src="image/tackle_box/tackle_nav.png" alt="Tackle">
-                <h2>Tackle Box</h2>
-            </div>
-            <p>Review tackle box item stats and pricing details to make better decisions for your runs.</p>
-        </a>
+        function toggleMenu() {
+            const nav = document.getElementById('sideNav');
+            const overlay = document.getElementById('overlay');
+            const btn = document.querySelector('.menu-toggle');
 
-        <a class="dashboard-card" href="autoclave.html">
-            <div class="dashboard-card-header">
-                <img src="image/auto_clave/autoclave_nav.png" alt="Autoclave">
-                <h2>Autoclave</h2>
-            </div>
-            <p>Calculate surgical tool conversions, final stitches, total cost, and profit from autoclave processing.</p>
-        </a>
-    </div>
-</div>
+            nav.classList.toggle('active');
+            overlay.classList.toggle('active');
 
-<script>
-// Active Link Logic
-const navLinks = document.querySelectorAll('.nav-link');
-let currentPage = window.location.pathname.split('/').pop();
-
-// If the page is empty or just the folder name, default it to index.html
-if (currentPage === '' || currentPage === 'growtopia-calculator') {
-    currentPage = 'index.html';
-}
-
-navLinks.forEach(link => {
-    const linkHref = link.getAttribute('href');
-    if (linkHref === currentPage) {
-        link.classList.add('active');
-    } else {
-        link.classList.remove('active');
-    }
-});
-
-navLinks.forEach(link => {
-    const linkHref = link.getAttribute('href');
-    // Ensure both index.html and root (/) trigger the Home active state
-    if (linkHref === currentPage || (currentPage === '' && linkHref === 'index.html')) {
-        link.classList.add('active');
-    } else {
-        link.classList.remove('active');
-    }
-});
-
-function toggleMenu() {
-    const nav = document.getElementById('sideNav');
-    const overlay = document.getElementById('overlay');
-    const btn = document.querySelector('.menu-toggle');
-
-    nav.classList.toggle('active');
-    overlay.classList.toggle('active');
-
-    btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
-}
-</script>
+            btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
+        }
+    </script>
 </body>
+
 </html>
