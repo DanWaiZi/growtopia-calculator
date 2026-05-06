@@ -252,7 +252,7 @@ button {
     margin-top: 10px;
 }
 
-button:hover {
+.menu-toggle:hover {
     transform: scale(1.03);
     background: #7dd3fc;
 }
@@ -408,7 +408,7 @@ button:hover {
         height: 50px;
         font-size: 28px;
         z-index: 2000;
-        background: #0ea5e9;
+        background: #1e293b;
         color: white;
         border: none;
         border-radius: 10px;
