@@ -9,12 +9,29 @@
     <!-- 1. Library Integration -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        /* FIX: Styling for the Menu Toggle Button */
+        .menu-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1100;
+            background: #1e293b;
+            color: white;
+            border: 1px solid #334155;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        /* Styling for the Download Button */
         #downloadBtn {
             display: none;
             width: 100%;
             background-color: #64748b;
             color: white;
-            padding: 15px;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -27,28 +44,17 @@
             background-color: #475569;
         }
 
-        .input-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        /* Fixed Result Box Styling to prevent transparency */
         .result-box {
-            display: none;
-            background-color: #0f172a !important;
-            /* Forces solid dark blue */
-            border: 1px solid #334155;
-            border-radius: 12px;
+            background-color: #0a192f;
+            border-radius: 8px;
             padding: 20px;
-            margin-top: 15px;
-            color: white;
+            margin-top: 20px;
         }
     </style>
 </head>
 
 <body>
+    <!-- Fixed Button Class -->
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
@@ -87,17 +93,17 @@
         </div>
         <div class="input-group">
             <label>Surgical Price (qty)/(price)</label>
-            <input type="text" id="surgical_price" value="20/1" placeholder="e.g., 20/1">
+            <input type="text" id="surgical_price" value="3/1" placeholder="e.g., 20/1">
         </div>
         <div class="input-group">
             <label>Surgical Stitches Price (qty)/(price)</label>
-            <input type="text" id="stitches_price" value="1/1" placeholder="e.g., 1/1">
+            <input type="text" id="stitches_price" value="1/4" placeholder="e.g., 1/1">
         </div>
 
         <div class="input-group">
             <label>Apply to All Tools</label>
             <div style="display: flex; gap: 10px;">
-                <input type="number" id="bulk_amount" value="0" min="0" style="flex: 1;">
+                <input type="number" id="bulk_amount" value="200" min="0" style="flex: 1;">
                 <button onclick="applyBulkAmount()"
                     style="width: 100px; margin: 0; padding: 10px; background: #0ea5e9; color: white; border: none; border-radius: 8px; cursor: pointer;">Apply</button>
             </div>
@@ -109,8 +115,7 @@
 
         <button id="downloadBtn" onclick="downloadResult()">Download Result as Image</button>
 
-        <!-- Result Box with explicit inline style to fight transparency -->
-        <div id="auto_res" class="result-box" style="background-color: #0f172a;"></div>
+        <div id="autoclave_res" class="result-box" style="display: none;"></div>
     </div>
 
     <script>
@@ -162,21 +167,33 @@
         }
 
         function calcAutoclave() {
+            const res = document.getElementById('autoclave_res');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            res.style.display = 'block';
+            downloadBtn.style.display = 'block';
+
             const startStitches = parseInt(document.getElementById('start_stitches').value) || 0;
             const pricePerTool = parseRatio(document.getElementById('surgical_price').value);
             const pricePerStitch = parseRatio(document.getElementById('stitches_price').value);
 
             let totalToolCost = 0;
             let toolCounts = {};
+            let initialToolTotal = 0;
 
+            // Calculate the actual initial cost based on tools entered
             autoclaveTools.forEach(tool => {
                 const qty = parseInt(document.getElementById(`auto_${tool.id}`).value) || 0;
                 toolCounts[tool.id] = qty;
-                totalToolCost += qty * pricePerTool;
+                initialToolTotal += qty;
             });
+
+            totalToolCost = initialToolTotal * pricePerTool;
 
             let stitches = startStitches;
             let processing = true;
+
+            // Conversion Logic
             while (processing) {
                 let toolToConvert = null;
                 let maxCount = 19;
@@ -198,31 +215,28 @@
                 }
             }
 
-            const totalRevenue = stitches * pricePerStitch;
-            const profit = totalRevenue - totalToolCost;
-
-            const res = document.getElementById('auto_res');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            res.style.display = 'block';
-            downloadBtn.style.display = 'block';
+            const totalEarned = stitches * pricePerStitch;
+            const profit = totalEarned - totalToolCost;
 
             res.innerHTML = `
                 <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0;">AUTOCLAVE SUMMARY</h3>
                 <div class="result-item" style="display: flex; justify-content: space-between; padding: 10px 0;">
-                    <span style="color: #94a3b8;">Final Stitches:</span> <span style="color:white;">${stitches}</span>
-                </div>
-                <div class="result-item" style="display: flex; justify-content: space-between; padding: 10px 0;">
                     <span style="color: #94a3b8;">Total Cost:</span> <span style="color:white;">${totalToolCost.toFixed(1)} WL</span>
                 </div>
-                <div class="result-item" style="display: flex; justify-content: space-between; padding: 12px 0; border-top: 1px solid #334155; margin-top: 10px; font-weight: bold; color: ${profit >= 0 ? '#4ade80' : '#f87171'};">
+                <div class="result-item" style="display: flex; justify-content: space-between; padding: 10px 0;">
+                    <span style="color: #94a3b8;">Final Stitches:</span> <span style="color:white;">${stitches}</span>
+                </div>
+                <div class="result-item" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #334155; padding-bottom: 15px;">
+                    <span style="color: #94a3b8;">Total Earned:</span> <span style="color:white;">${totalEarned.toFixed(1)} WL</span>
+                </div>
+                <div class="result-item" style="display: flex; justify-content: space-between; padding: 12px 0; margin-top: 10px; font-weight: bold; color: ${profit >= 0 ? '#4ade80' : '#f87171'};">
                     <span>ESTIMATE PROFIT:</span> <span>${profit.toFixed(1)} WL</span>
                 </div>
             `;
         }
 
         function downloadResult() {
-            const resultBox = document.getElementById('auto_res');
+            const resultBox = document.getElementById('autoclave_res');
             const exportBg = "#0f172a";
 
             html2canvas(resultBox, {
@@ -230,12 +244,28 @@
                 scale: 3,
                 logging: false,
                 useCORS: true,
+                allowTaint: true,
                 onclone: (clonedDoc) => {
-                    const clonedRes = clonedDoc.getElementById('auto_res');
+                    const clonedRes = clonedDoc.getElementById('autoclave_res');
                     clonedRes.style.display = 'block';
                     clonedRes.style.background = exportBg;
-                    clonedRes.style.padding = '30px';
-                    clonedRes.style.borderRadius = '0px';
+                    clonedRes.style.padding = '25px';
+                    clonedRes.style.animation = 'none';
+
+                    const items = clonedRes.querySelectorAll('.result-item');
+                    items.forEach(item => {
+                        item.style.opacity = '1';
+                        item.style.display = 'flex';
+                        item.style.justifyContent = 'space-between';
+                        item.style.visibility = 'visible';
+                        const currentColor = window.getComputedStyle(item).color;
+                        item.style.color = currentColor;
+                    });
+
+                    const header = clonedRes.querySelector('h3');
+                    if (header) {
+                        header.style.borderBottom = '1px solid #334155';
+                    }
                 }
             }).then(canvas => {
                 const link = document.createElement('a');
@@ -245,14 +275,9 @@
             });
         }
 
-        // 1. Find and REMOVE your old line: 
-        // const currentPage = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
-
-        // 2. PASTE this smarter version in its place:
         const navLinks = document.querySelectorAll('.nav-link');
         let currentPage = window.location.pathname.split('/').pop();
 
-        // This part handles GitHub's folder naming (growtopia-calculator)
         if (currentPage === '' || currentPage === 'growtopia-calculator') {
             currentPage = 'index.html';
         }

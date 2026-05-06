@@ -142,15 +142,15 @@ body {
     padding: 30px;
     border-radius: 15px;
     transition: padding 0.2s ease, border-radius 0.2s ease, box-shadow 0.2s ease;
-    
+
     /* Fixed dimensions to prevent navbar movement */
-    width: 680px; 
-    min-height: 780px; 
-    
+    width: 680px;
+    min-height: 780px;
+
     margin: 50px auto;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 /* --- BRANDING & TITLES --- */
@@ -186,8 +186,8 @@ h1 {
     border-radius: 0;
 }
 
-h1 + .input-group,
-h1 + .input-grid {
+h1+.input-group,
+h1+.input-grid {
     margin-top: 20px;
 }
 
@@ -221,7 +221,8 @@ h1 + .input-grid {
     display: block;
 }
 
-.input-group input, .input-group select {
+.input-group input,
+.input-group select {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid var(--border);
@@ -251,7 +252,7 @@ button {
     margin-top: 10px;
 }
 
-button:hover { 
+button:hover {
     transform: scale(1.03);
     background: #7dd3fc;
 }
@@ -326,7 +327,8 @@ button:hover {
 }
 
 .result-box {
-    display: none; /* This hides the box by default */
+    display: none;
+    /* This hides the box by default */
     background-color: #0f172a;
     border: 1px solid #334155;
     padding: 20px;
@@ -363,14 +365,17 @@ button:hover {
 
 /* The Dark Background Overlay */
 .overlay {
-    display: none; /* Hidden by default */
+    display: none;
+    /* Hidden by default */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
-    z-index: 1000; /* Behind the navbar, but above the content */
+    background: rgba(0, 0, 0, 0.6);
+    /* Semi-transparent black */
+    z-index: 1000;
+    /* Behind the navbar, but above the content */
 }
 
 /* Show it only on mobile when active */
@@ -381,8 +386,10 @@ button:hover {
 }
 
 @media screen and (max-width: 768px) {
+
     /* 1. Prevent the page from wobbling left and right */
-    html, body {
+    html,
+    body {
         overflow-x: hidden;
         width: 100%;
         margin: 0;
@@ -423,32 +430,38 @@ button:hover {
 
     /* 4. CENTER the container and fix the scale */
     .container {
-        margin: 80px auto 20px auto !important; /* Force center! */
-        width: 90% !important; /* Take up 90% of phone width */
-        max-width: 450px; /* Don't get too wide on tablets */
+        margin: 80px auto 20px auto !important;
+        /* Force center! */
+        width: 90% !important;
+        /* Take up 90% of phone width */
+        max-width: 450px;
+        /* Don't get too wide on tablets */
         padding: 20px;
-        float: none !important; /* Remove any floating */
+        float: none !important;
+        /* Remove any floating */
         display: block !important;
         font-size: 1.1rem;
     }
 
     /* 5. Fix the input grid so images/text don't cut off */
     .input-grid {
-        grid-template-columns: 1fr !important; /* One column only */
+        grid-template-columns: 1fr !important;
+        /* One column only */
         gap: 15px;
     }
 
     .input-group {
         width: 100%;
     }
-    
+
     /* Make the summary text smaller so it doesn't wrap as much */
     .result-box {
         padding: 15px !important;
     }
 
     .result-item {
-        font-size: 0.85rem !important; /* Slightly smaller text for items */
+        font-size: 0.85rem !important;
+        /* Slightly smaller text for items */
         line-height: 1.4;
     }
 
@@ -458,7 +471,7 @@ button:hover {
 
     /* Fix the Total Revenue section at the bottom */
     .result-item[style*="font-size: 1.2em"] {
-        font-size: 1rem !important; 
+        font-size: 1rem !important;
         margin-top: 10px;
         border-top: 1px solid #334155;
         padding-top: 10px;
@@ -476,25 +489,32 @@ button:hover {
         padding: 10px 0 !important;
         display: flex;
         flex-direction: column;
-        align-items: flex-start; /* Force align everything to the left */
+        align-items: flex-start;
+        /* Force align everything to the left */
     }
 
     /* 2. Fix the individual link alignment */
     .nav-link {
         width: 100% !important;
         display: flex !important;
-        align-items: center; /* Vertical center the icon and text */
-        justify-content: flex-start !important; /* Horizontal left align */
-        padding: 12px 20px !important; /* Give them consistent space */
+        align-items: center;
+        /* Vertical center the icon and text */
+        justify-content: flex-start !important;
+        /* Horizontal left align */
+        padding: 12px 20px !important;
+        /* Give them consistent space */
         text-align: left !important;
-        gap: 15px; /* Adds a clean gap between the icon and text */
+        gap: 15px;
+        /* Adds a clean gap between the icon and text */
     }
 
     /* 3. Make sure icons have a consistent width so text stays lined up */
-    .nav-link img, .nav-link i {
+    .nav-link img,
+    .nav-link i {
         width: 24px;
         text-align: center;
-        flex-shrink: 0; /* Prevents icons from squishing */
+        flex-shrink: 0;
+        /* Prevents icons from squishing */
     }
 }
 
@@ -505,19 +525,34 @@ button:hover {
 
 /* --- ANIMATIONS --- */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes slideInLeft {
-    from { opacity: 0; transform: translateX(-30px); }
-    to { opacity: 1; transform: translateX(0); }
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* Staggered ripples */
 /* This forces every input group to use the same timing */
 .input-group {
-    opacity: 1; /* or 0 if you are using an entry animation */
+    opacity: 1;
+    /* or 0 if you are using an entry animation */
     transition: all 0.4s ease-in-out !important;
-    transition-delay: 0s !important; 
+    transition-delay: 0s !important;
 }
