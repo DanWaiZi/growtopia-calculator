@@ -162,15 +162,16 @@
             }
             return parseFloat(str) || 0;
         }
-
         function calculateFishing() {
             const res = document.getElementById('fsh_res');
             const downloadBtn = document.getElementById('downloadBtn');
             const mode = document.getElementById('fishing_mode').value;
 
+            // Show the result box and download button
             res.style.display = 'block';
             downloadBtn.style.display = 'block';
 
+            // Basic Inputs
             const raw_bait = parseFloat(document.getElementById('bait_amt').value) || 0;
             const bait_amt = Math.round(raw_bait);
             const trawler_choice = document.getElementById('use_trawl').value;
@@ -182,48 +183,80 @@
             const minutes = Math.floor((total_seconds % 3600) / 60);
             const remain_seconds = total_seconds % 60;
 
-            const total_bait_wl = bait_amt * parseRatio(document.getElementById('prc_bait').value);
+            // Prices (converted to WL per 1 unit)
+            const pBait = parseRatio(document.getElementById('prc_bait').value);
+            const pTrawl = parseRatio(document.getElementById('prc_trawl').value);
 
             let total_expenses = 0;
             let total_income = 0;
-            let detail_html = "";
-            let trawler_cost = 0;
+            let income_details_html = "";
+            let expense_details_html = "";
 
             if (mode === 'uranium') {
-                // Uranium Specific Logic
-                let trawler_amount = (trawler_choice === "Y") ? 0.005 * bait_amt : 0;
-                trawler_cost = trawler_amount * parseRatio(document.getElementById('prc_trawl').value);
-
+                // --- URANIUM EXPENSES ---
+                const total_bait_wl = bait_amt * pBait;
+                const trawler_amount = (trawler_choice === "Y") ? 0.005 * bait_amt : 0;
+                const trawler_cost = trawler_amount * pTrawl;
                 const det_qty = Math.floor(bait_amt * 0.05);
                 const det_cost = det_qty * parseRatio(document.getElementById('prc_detonator').value);
+
                 total_expenses = total_bait_wl + trawler_cost + det_cost;
 
-                const qtyWhiz = Math.floor(bait_amt * 0.005);
+                expense_details_html = `
+            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Baits (${bait_amt}):</span><span>-${total_bait_wl.toFixed(1)} WL</span></div>
+            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler Fuel:</span><span>-${trawler_cost.toFixed(1)} WL</span></div>
+            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Detonators (${det_qty}):</span><span>-${det_cost.toFixed(1)} WL</span></div>
+        `;
+
+                // --- URANIUM INCOME (Thanksgiving Rod Logic) ---
+                // 1. Fish Breakdown (100% guarantee)
+                const qtyPerf = Math.floor(bait_amt * 0.075); // 7.5% Perfect
+                const qtyNorm = bait_amt - qtyPerf;          // 95% Normal
+
+                // 2. Weight Logic for Normal Fish (50lb average)
+                const total_norm_lb = qtyNorm * 50;
+                const pFishNorm = parseRatio(document.getElementById('prc_fish_norm').value);
+                const valNorm = total_norm_lb * pFishNorm; // Assumes input is WL per 1 LB
+
+                // 3. Perfect Fish & Bonuses
+                const valPerf = qtyPerf * parseRatio(document.getElementById('prc_fish_perf').value);
+                const qtyWhiz = Math.floor(bait_amt * 0.003);
                 const qtyBrain = Math.floor(bait_amt * 0.03);
                 const qtyOoze = Math.floor(bait_amt * 0.03);
-                const fish_pool = Math.floor(bait_amt * 0.935);
-                const qtyNorm = Math.floor(fish_pool * 0.99);
-                const qtyPerf = Math.floor(fish_pool * 0.01);
 
                 const valWhiz = qtyWhiz * parseRatio(document.getElementById('prc_whizmo').value);
                 const valBrain = qtyBrain * parseRatio(document.getElementById('prc_brain').value);
                 const valOoze = qtyOoze * parseRatio(document.getElementById('prc_ooze').value);
-                const valNorm = qtyNorm * parseRatio(document.getElementById('prc_fish_norm').value);
-                const valPerf = qtyPerf * parseRatio(document.getElementById('prc_fish_perf').value);
 
-                total_income = valWhiz + valBrain + valOoze + valNorm + valPerf;
-                detail_html = `
-                    <div class="result-item" style="display: flex; justify-content: space-between;"><span>Brain Worms (~${qtyBrain}):</span><span>${valBrain.toFixed(1)} WL</span></div>
-                    <div class="result-item" style="display: flex; justify-content: space-between;"><span>Normal Fish (~${qtyNorm}):</span><span>${valNorm.toFixed(1)} WL</span></div>
-                `;
+                total_income = valNorm + valPerf + valWhiz + valBrain + valOoze;
+
+                income_details_html = `
+            <div class="result-item"><span>Normal Fish (${qtyNorm} | ~${total_norm_lb}lb):</span><span>${valNorm.toFixed(1)} WL</span></div>
+            <div class="result-item"><span>Perfect Fish (${qtyPerf}):</span><span>${valPerf.toFixed(1)} WL</span></div>
+            <div class="result-item" style="border-top: 1px dashed #334155; margin-top: 5px; padding-top: 5px;">
+                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Brain Worms (~${qtyBrain})</span><span>${valBrain.toFixed(1)} WL</span>
+            </div>
+            <div class="result-item">
+                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Ooze (~${qtyOoze})</span><span>${valOoze.toFixed(1)} WL</span>
+            </div>
+            <div class="result-item">
+                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Whizmo (~${qtyWhiz})</span><span>${valWhiz.toFixed(1)} WL</span>
+            </div>
+        `;
             } else {
-                // Role 8 Logic
+                // --- ROLE 8 LOGIC (Standard) ---
+                const total_bait_wl = bait_amt * pBait;
+                let trawler_cost = 0;
                 if (trawler_choice === "Y") {
-                    const baits_per_trawler = 1800 / 8;
-                    const trawlers_needed = Math.ceil(bait_amt / baits_per_trawler);
-                    trawler_cost = trawlers_needed * parseRatio(document.getElementById('prc_trawl').value);
+                    const trawlers_needed = Math.ceil(bait_amt / 225); // 1800s / 8s
+                    trawler_cost = trawlers_needed * pTrawl;
                 }
                 total_expenses = total_bait_wl + trawler_cost;
+
+                expense_details_html = `
+            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Baits (${bait_amt}):</span><span>-${total_bait_wl.toFixed(1)} WL</span></div>
+            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler Buffs:</span><span>-${trawler_cost.toFixed(1)} WL</span></div>
+        `;
 
                 const qtyShrimp = Math.round(bait_amt * 0.075);
                 const qtyNaval = Math.round(bait_amt * 0.015);
@@ -231,33 +264,40 @@
                 const valNaval = qtyNaval * parseRatio(document.getElementById('prc_naval').value);
 
                 total_income = valShrimp + valNaval;
-                detail_html = `
-                    <div class="result-item" style="display: flex; justify-content: space-between;"><span>Shrimp Lure (~${qtyShrimp}):</span><span>${valShrimp.toFixed(1)} WL</span></div>
-                    <div class="result-item" style="display: flex; justify-content: space-between;"><span>Naval Mine (~${qtyNaval}):</span><span>${valNaval.toFixed(1)} WL</span></div>
-                `;
+                income_details_html = `
+            <div class="result-item"><span>Shrimp Lure (~${qtyShrimp}):</span><span>${valShrimp.toFixed(1)} WL</span></div>
+            <div class="result-item"><span>Naval Mine (~${qtyNaval}):</span><span>${valNaval.toFixed(1)} WL</span></div>
+        `;
             }
 
             const net_profit = total_income - total_expenses;
 
+            // Render the report
             res.innerHTML = `
-                <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0;">
-                    ${mode === 'uranium' ? 'URANIUM SUMMARY' : 'ROLE 8 PROFITS'}
-                </h3>
-                <div class="result-item" style="display: flex; justify-content: space-between; color: #38bdf8;">
-                    <span>Total Time:</span><span>${hours}h ${minutes}m ${remain_seconds}s</span>
-                </div>
-                <div class="result-item" style="display: flex; justify-content: space-between; font-weight: bold; color: #f87171; margin-top: 10px;">
-                    <span>TOTAL EXPENSES:</span><span>${total_expenses.toFixed(1)} WL</span>
-                </div>
-                <div class="result-item" style="display: flex; justify-content: space-between; font-weight: bold; color: #4ade80; margin-top: 10px;">
-                    <span>TOTAL INCOME:</span><span>${total_income.toFixed(1)} WL</span>
-                </div>
-                ${detail_html}
-                <hr style="border:0; border-top:1px solid #334155; margin:10px 0;">
-                <div class="result-item" style="display: flex; justify-content: space-between; color: ${net_profit >= 0 ? '#4ade80' : '#f87171'}; font-weight: bold; font-size: 1.2em;">
-                    <span>NET PROFIT:</span><span>${net_profit.toFixed(1)} WL</span>
-                </div>
-            `;
+        <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0; letter-spacing: 1px;">
+            ${mode === 'uranium' ? 'URANIUM FISHING REPORT' : 'ROLE 8 PROFIT REPORT'}
+        </h3>
+        
+        <div class="result-item" style="color: #38bdf8; margin-bottom: 10px; font-family: sans-serif; font-weight: bold;">
+            <span>Total Time:</span><span>${hours}h ${minutes}m ${remain_seconds}s</span>
+        </div>
+
+        <div class="result-item" style="font-weight: bold; color: #f87171; border-top: 1px solid #334155; padding-top: 8px;">
+            <span>TOTAL EXPENSES:</span><span>${total_expenses.toFixed(1)} WL</span>
+        </div>
+        ${expense_details_html}
+        
+        <div class="result-item" style="font-weight: bold; color: #4ade80; margin-top: 10px; border-top: 1px solid #334155; padding-top: 8px;">
+            <span>TOTAL INCOME:</span><span>${total_income.toFixed(1)} WL</span>
+        </div>
+        ${income_details_html}
+
+        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+        
+        <div class="result-item" style="color: ${net_profit >= 0 ? '#4ade80' : '#f87171'}; font-weight: bold; font-size: 1.3em;">
+            <span>NET PROFIT:</span><span>${net_profit.toFixed(1)} WL</span>
+        </div>
+    `;
         }
 
         // 3. Add Download Function
