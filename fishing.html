@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Fishing</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        #downloadBtn {
+            display: none;
+            width: 100%;
+            background-color: #64748b;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        #downloadBtn:hover {
+            background-color: #475569;
+        }
+
+        .result-box {
+            background-color: #0a192f;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Helper class for dynamic fields */
+        .hidden-group {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+    <div class="navbar" id="sideNav">
+        <div class="navbar-title">
+            <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+            <span class="navbar-title-text">Calculator</span>
+            <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+            <span class="subtitle">by TDoomGT</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link" id="nav-home">
+                <i><img src="image/home.png" alt="Home" style="width: 22px;"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            <a href="fishing.html" class="nav-link" id="nav-fishing">
+                <i><img src="image/fishing/fishing_nav.png" alt="Fishing"></i>
+                <span class="nav-text">Fishing</span>
+            </a>
+            <a href="pepper.html" class="nav-link" id="nav-pepper">
+                <i><img src="image/pepper_recycling/pepper_nav.png" alt="Pepper"></i>
+                <span class="nav-text">Pepper Recycling</span>
+            </a>
+            <a href="science.html" class="nav-link" id="nav-science">
+                <i><img src="image/science_station/science_nav.png" alt="Science"></i>
+                <span class="nav-text">Science Station</span>
+            </a>
+            <a href="tackle.html" class="nav-link" id="nav-tackle">
+                <i><img src="image/tackle_box/tackle_nav.png" alt="Tackle"></i>
+                <span class="nav-text">Tackle Box</span>
+            </a>
+            <a href="autoclave.html" class="nav-link" id="nav-autoclave">
+                <i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i>
+                <span class="nav-text">Autoclave</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Fishing</h1>
+
+        <!-- Fishing Mode Selector -->
+        <div class="input-group" style="margin-bottom: 20px;">
+            <label>Fishing Mode:</label>
+            <select id="fishing_mode" onchange="toggleModeFields()"
+                style="width: 100%; padding: 10px; border-radius: 8px; background: #1e293b; color: white; border: 1px solid #334155;">
+                <option value="uranium">Uranium Fishing (Using Thanksgiving Rod)</option>
+                <option value="role7">Role 7 Fishing (With Fishing Fly)</option>
+            </select>
+        </div>
+
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Amount of Baits:</label>
+                <input type="number" id="bait_amt" value="200">
+            </div>
+            <div class="input-group">
+                <label>Bait Price (qty/wl):</label>
+                <input type="text" id="prc_bait" value="20/1">
+            </div>
+
+            <div class="input-group">
+                <label>Use Trawler?</label>
+                <select id="use_trawl">
+                    <option value="Y">Yes (8s per bait)</option>
+                    <option value="N">No (10s per bait)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Trawler Price (qty/wl):</label>
+                <input type="text" id="prc_trawl" value="1/9">
+            </div>
+
+            <!-- Uranium Fields -->
+            <div class="input-group ura-field"><label>Whizmo (qty/wl):</label><input type="text" id="prc_whizmo"
+                    value="1/10"></div>
+            <div class="input-group ura-field"><label>Brainworm (qty/wl):</label><input type="text" id="prc_brain"
+                    value="1/10"></div>
+            <div class="input-group ura-field"><label>Ooze (qty/wl):</label><input type="text" id="prc_ooze"
+                    value="1/13"></div>
+            <div class="input-group ura-field"><label>Normal Fish (qty/wl):</label><input type="text" id="prc_fish_norm"
+                    value="300/1"></div>
+            <div class="input-group ura-field"><label>Perfect Fish (qty/wl):</label><input type="text"
+                    id="prc_fish_perf" value="1/2"></div>
+            <div class="input-group ura-field"><label>Nuclear Detonator (qty/wl):</label><input type="text"
+                    id="prc_detonator" value="1/1"></div>
+
+            <!-- Role 8 Fields -->
+            <div class="input-group role7-field hidden-group"><label>Shrimp Lure (qty/wl):</label><input type="text"
+                    id="prc_shrimp" value="10/1"></div>
+            <div class="input-group role7-field hidden-group"><label>Naval Mine (qty/wl):</label><input type="text"
+                    id="prc_naval" value="1/5"></div>
+        </div>
+
+        <button onclick="calculateFishing()">Calculate</button>
+        <button id="downloadBtn" onclick="downloadResult()">Download Result as Image</button>
+
+        <div id="fsh_res" class="result-box" style="display: none;"></div>
+    </div>
+
+    <script>
+        function toggleModeFields() {
+            const mode = document.getElementById('fishing_mode').value;
+            const uraFields = document.querySelectorAll('.ura-field');
+            const role7Fields = document.querySelectorAll('.role7-field');
+
+            if (mode === 'uranium') {
+                uraFields.forEach(f => f.style.display = 'block');
+                role7Fields.forEach(f => f.style.display = 'none');
+            } else {
+                uraFields.forEach(f => f.style.display = 'none');
+                role7Fields.forEach(f => f.style.display = 'block');
+            }
+        }
+
+        function parseRatio(str) {
+            if (str.includes('/')) {
+                const parts = str.split('/');
+                return parseFloat(parts[1]) / parseFloat(parts[0]);
+            }
+            return parseFloat(str) || 0;
+        }
+
+        function calculateFishing() {
+            const res = document.getElementById('fsh_res');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const mode = document.getElementById('fishing_mode').value;
+
+            res.style.display = 'block';
+            downloadBtn.style.display = 'block';
+
+            const raw_bait = parseFloat(document.getElementById('bait_amt').value) || 0;
+            const bait_amt = Math.round(raw_bait);
+            const trawler_choice = document.getElementById('use_trawl').value;
+
+            // Time Calculations
+            let sec_per_bait = (trawler_choice === "Y") ? 8 : 10;
+            let total_seconds = bait_amt * sec_per_bait;
+            const hours = Math.floor(total_seconds / 3600);
+            const minutes = Math.floor((total_seconds % 3600) / 60);
+            const remain_seconds = total_seconds % 60;
+
+            const total_bait_wl = bait_amt * parseRatio(document.getElementById('prc_bait').value);
+
+            let total_expenses = 0;
+            let total_income = 0;
+            let detail_html = "";
+            let trawler_cost = 0;
+
+            if (mode === 'uranium') {
+                // Uranium Specific Logic
+                let trawler_amount = (trawler_choice === "Y") ? 0.005 * bait_amt : 0;
+                trawler_cost = trawler_amount * parseRatio(document.getElementById('prc_trawl').value);
+
+                const det_qty = Math.floor(bait_amt * 0.05);
+                const det_cost = det_qty * parseRatio(document.getElementById('prc_detonator').value);
+                total_expenses = total_bait_wl + trawler_cost + det_cost;
+
+                const qtyWhiz = Math.floor(bait_amt * 0.005);
+                const qtyBrain = Math.floor(bait_amt * 0.03);
+                const qtyOoze = Math.floor(bait_amt * 0.03);
+                const fish_pool = Math.floor(bait_amt * 0.935);
+                const qtyNorm = Math.floor(fish_pool * 0.99);
+                const qtyPerf = Math.floor(fish_pool * 0.01);
+
+                const valWhiz = qtyWhiz * parseRatio(document.getElementById('prc_whizmo').value);
+                const valBrain = qtyBrain * parseRatio(document.getElementById('prc_brain').value);
+                const valOoze = qtyOoze * parseRatio(document.getElementById('prc_ooze').value);
+                const valNorm = qtyNorm * parseRatio(document.getElementById('prc_fish_norm').value);
+                const valPerf = qtyPerf * parseRatio(document.getElementById('prc_fish_perf').value);
+
+                total_income = valWhiz + valBrain + valOoze + valNorm + valPerf;
+                detail_html = `
+                    <div class="result-item" style="display: flex; justify-content: space-between;"><span>Brain Worms (~${qtyBrain}):</span><span>${valBrain.toFixed(1)} WL</span></div>
+                    <div class="result-item" style="display: flex; justify-content: space-between;"><span>Normal Fish (~${qtyNorm}):</span><span>${valNorm.toFixed(1)} WL</span></div>
+                `;
+            } else {
+                // Role 8 Logic
+                if (trawler_choice === "Y") {
+                    const baits_per_trawler = 1800 / 8;
+                    const trawlers_needed = Math.ceil(bait_amt / baits_per_trawler);
+                    trawler_cost = trawlers_needed * parseRatio(document.getElementById('prc_trawl').value);
+                }
+                total_expenses = total_bait_wl + trawler_cost;
+
+                const qtyShrimp = Math.round(bait_amt * 0.075);
+                const qtyNaval = Math.round(bait_amt * 0.015);
+                const valShrimp = qtyShrimp * parseRatio(document.getElementById('prc_shrimp').value);
+                const valNaval = qtyNaval * parseRatio(document.getElementById('prc_naval').value);
+
+                total_income = valShrimp + valNaval;
+                detail_html = `
+                    <div class="result-item" style="display: flex; justify-content: space-between;"><span>Shrimp Lure (~${qtyShrimp}):</span><span>${valShrimp.toFixed(1)} WL</span></div>
+                    <div class="result-item" style="display: flex; justify-content: space-between;"><span>Naval Mine (~${qtyNaval}):</span><span>${valNaval.toFixed(1)} WL</span></div>
+                `;
+            }
+
+            const net_profit = total_income - total_expenses;
+
+            res.innerHTML = `
+                <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0;">
+                    ${mode === 'uranium' ? 'URANIUM SUMMARY' : 'ROLE 8 PROFITS'}
+                </h3>
+                <div class="result-item" style="display: flex; justify-content: space-between; color: #38bdf8;">
+                    <span>Total Time:</span><span>${hours}h ${minutes}m ${remain_seconds}s</span>
+                </div>
+                <div class="result-item" style="display: flex; justify-content: space-between; font-weight: bold; color: #f87171; margin-top: 10px;">
+                    <span>TOTAL EXPENSES:</span><span>${total_expenses.toFixed(1)} WL</span>
+                </div>
+                <div class="result-item" style="display: flex; justify-content: space-between; font-weight: bold; color: #4ade80; margin-top: 10px;">
+                    <span>TOTAL INCOME:</span><span>${total_income.toFixed(1)} WL</span>
+                </div>
+                ${detail_html}
+                <hr style="border:0; border-top:1px solid #334155; margin:10px 0;">
+                <div class="result-item" style="display: flex; justify-content: space-between; color: ${net_profit >= 0 ? '#4ade80' : '#f87171'}; font-weight: bold; font-size: 1.2em;">
+                    <span>NET PROFIT:</span><span>${net_profit.toFixed(1)} WL</span>
+                </div>
+            `;
+        }
+
+        // 3. Add Download Function
+        function downloadResult() {
+            const resultBox = document.getElementById('fsh_res');
+            const exportBg = "#0f172a";
+
+            html2canvas(resultBox, {
+                backgroundColor: exportBg,
+                scale: 3,
+                logging: false,
+                useCORS: true,
+                onclone: (clonedDoc) => {
+                    const clonedRes = clonedDoc.getElementById('fsh_res');
+                    clonedRes.style.display = 'block';
+                    clonedRes.style.background = exportBg;
+                    clonedRes.style.padding = '25px';
+                    clonedRes.style.animation = 'none';
+
+                    const items = clonedRes.querySelectorAll('.result-item');
+                    items.forEach(item => {
+                        item.style.opacity = '1';
+                        item.style.display = 'flex';
+                        item.style.justifyContent = 'space-between';
+                        item.style.visibility = 'visible';
+                        const currentColor = window.getComputedStyle(item).color;
+                        item.style.color = currentColor;
+                    });
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'fishing_report.png';
+                link.href = canvas.toDataURL("image/png", 1.0);
+                link.click();
+            });
+        }
+
+        function toggleMenu() {
+            document.getElementById('sideNav').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        // Active Link Logic
+        const navLinks = document.querySelectorAll('.nav-link');
+        let currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPage) link.classList.add('active');
+        });
+    </script>
+</body>
+
+</html>

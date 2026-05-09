@@ -202,7 +202,7 @@ h1+.input-grid {
 .input-group {
     display: flex;
     flex-direction: column;
-    opacity: 0;
+    opacity: 1;
     animation: slideInLeft 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
@@ -555,4 +555,12 @@ button {
     /* or 0 if you are using an entry animation */
     transition: all 0.4s ease-in-out !important;
     transition-delay: 0s !important;
+}
+
+/* Add this to force inputs to stretch to the edges of the grid */
+.input-group input, 
+.input-group select {
+    width: 100%;           
+    box-sizing: border-box; 
+    display: block;        
 }
