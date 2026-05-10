@@ -132,10 +132,11 @@
             }
 
             if (choiceF && mChem > 0) {
-                fuelPacks = Math.floor(Math.min(mChem, g / 10, b / 2));
-                mChem -= fuelPacks;
-                g -= (fuelPacks * 10);
-                b -= (fuelPacks * 2);
+                let batches = Math.floor(Math.min(mChem, g / 10, b / 2));
+                fuelPacks = batches * 5;
+                mChem -= batches;
+                g -= (batches * 10);
+                b -= (batches * 2);
             }
 
             const wlValue = fuelPacks * fuelRate;
