@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Fishing</title>
+    <title>Fishing Calculator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         #downloadBtn {
@@ -33,7 +33,6 @@
             margin-top: 20px;
         }
 
-        /* Helper class for dynamic fields */
         .hidden-group {
             display: none;
         }
@@ -43,6 +42,7 @@
 <body>
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
     <div class="navbar" id="sideNav">
         <div class="navbar-title">
             <img src="image/title.png" alt="Growtopia" class="navbar-logo">
@@ -79,28 +79,26 @@
     </div>
 
     <div class="container">
-        <h1>Fishing</h1>
+        <h1>Fishing Calculator</h1>
 
-        <!-- Fishing Mode Selector -->
         <div class="input-group" style="margin-bottom: 20px;">
             <label>Fishing Mode:</label>
             <select id="fishing_mode" onchange="toggleModeFields()"
                 style="width: 100%; padding: 10px; border-radius: 8px; background: #1e293b; color: white; border: 1px solid #334155;">
-                <option value="uranium">Uranium Glowing Lure Fishing (Using Thanksgiving Rod)</option>
-                <option value="role7">Fishing Fly Role 7 Fishing (Using Normal Rod)</option>
+                <option value="uranium">Uranium Lure (Thanksgiving Rod)</option>
+                <option value="role7">Fishing Fly Level 7 (Normal Rod)</option>
             </select>
         </div>
 
         <div class="input-grid">
             <div class="input-group">
-                <label><img src="image/tackle_box/wiggly_worm.png" alt="Whizmo">Amount of Baits:</label>
-                <input type="number" id="bait_amt" value="200">
+                <label><img src="image/tackle_box/wiggly_worm.png" alt="Bait">Amount of Baits:</label>
+                <input type="number" id="bait_amt" value="200" min="1">
             </div>
             <div class="input-group">
-                <label><img src="image/world_lock.png" alt="World Lock">Bait Price (qty/wl):</label>
+                <label><img src="image/world_lock.png" alt="WL">Bait Price (qty/wl):</label>
                 <input type="text" id="prc_bait" value="17/1">
             </div>
-
             <div class="input-group">
                 <label><img src="image/fishing/trawler.png" alt="Trawler">Use Trawlerman's Friend?</label>
                 <select id="use_trawl">
@@ -109,11 +107,10 @@
                 </select>
             </div>
             <div class="input-group">
-                <label><img src="image/world_lock.png" alt="World Lock">Trawler Price (qty/wl):</label>
+                <label><img src="image/world_lock.png" alt="WL">Trawler Price (qty/wl):</label>
                 <input type="text" id="prc_trawl" value="1/9">
             </div>
 
-            <!-- Uranium Fields -->
             <div class="input-group ura-field">
                 <label><img src="image/fishing/whizmo_gizmo.png" alt="Whizmo">Whizmo (qty/wl):</label>
                 <input type="text" id="prc_whizmo" value="1/12">
@@ -123,34 +120,29 @@
                 <input type="text" id="prc_brain" value="1/13">
             </div>
             <div class="input-group ura-field">
-                <label><img src="image/fishing/primordial_ooze.png" alt="Ooze">Ooze (qty/wl):</label>
-                <input type="text" id="prc_ooze" value="1/14">
+                <label><img src="image/fishing/nuclear_detonator.png" alt="Detonator">Detonator (qty/wl):</label>
+                <input type="text" id="prc_detonator" value="1/2">
             </div>
             <div class="input-group ura-field">
                 <label><img src="image/fishing/normal_fish.png" alt="Fish">Normal Fish (qty/wl):</label>
                 <input type="text" id="prc_fish_norm" value="300/1">
             </div>
             <div class="input-group ura-field">
-                <label><img src="image/fishing/perfect_fish.png" alt="Perfect Fish">Perfect Fish (qty/wl):</label>
+                <label><img src="image/fishing/perfect_fish.png" alt="Perfect">Perfect Fish (qty/wl):</label>
                 <input type="text" id="prc_fish_perf" value="1/4">
             </div>
-            <div class="input-group ura-field">
-                <label><img src="image/fishing/nuclear_detonator.png" alt="Detonator">Nuclear Detonator (qty/wl):</label>
-                <input type="text" id="prc_detonator" value="1/2">
-            </div>
 
-            <!-- Role 8 Fields -->
             <div class="input-group role7-field hidden-group">
-                <label><img src="image/tackle_box/shrimp_lure.png" alt="Shrimp Lure">Shrimp Lure (qty/wl):</label>
+                <label><img src="image/tackle_box/shrimp_lure.png" alt="Shrimp">Shrimp Lure (qty/wl):</label>
                 <input type="text" id="prc_shrimp" value="1/3">
             </div>
             <div class="input-group role7-field hidden-group">
-                <label><img src="image/fishing/naval_mine.png" alt="Naval Mine">Naval Mine (qty/wl):</label>
+                <label><img src="image/fishing/naval_mine.png" alt="Naval">Naval Mine (qty/wl):</label>
                 <input type="text" id="prc_naval" value="1/30">
             </div>
         </div>
 
-        <button onclick="calculateFishing()">Calculate</button>
+        <button onclick="calculateFishing()" style="margin-top: 20px;">Calculate</button>
         <button id="downloadBtn" onclick="downloadResult()">Download Result as Image</button>
 
         <div id="fsh_res" class="result-box" style="display: none;"></div>
@@ -159,16 +151,8 @@
     <script>
         function toggleModeFields() {
             const mode = document.getElementById('fishing_mode').value;
-            const uraFields = document.querySelectorAll('.ura-field');
-            const role7Fields = document.querySelectorAll('.role7-field');
-
-            if (mode === 'uranium') {
-                uraFields.forEach(f => f.style.display = 'block');
-                role7Fields.forEach(f => f.style.display = 'none');
-            } else {
-                uraFields.forEach(f => f.style.display = 'none');
-                role7Fields.forEach(f => f.style.display = 'block');
-            }
+            document.querySelectorAll('.ura-field').forEach(f => f.style.display = (mode === 'uranium' ? 'block' : 'none'));
+            document.querySelectorAll('.role7-field').forEach(f => f.style.display = (mode === 'role7' ? 'block' : 'none'));
         }
 
         function parseRatio(str) {
@@ -178,101 +162,81 @@
             }
             return parseFloat(str) || 0;
         }
+
         function calculateFishing() {
             const res = document.getElementById('fsh_res');
             const downloadBtn = document.getElementById('downloadBtn');
             const mode = document.getElementById('fishing_mode').value;
 
-            // Show the result box and download button
             res.style.display = 'block';
             downloadBtn.style.display = 'block';
 
-            // Basic Inputs
-            const raw_bait = parseFloat(document.getElementById('bait_amt').value) || 0;
-            const bait_amt = Math.round(raw_bait);
+            const bait_amt = Math.round(parseFloat(document.getElementById('bait_amt').value)) || 0;
             const trawler_choice = document.getElementById('use_trawl').value;
 
-            // Time Calculations
+            // --- CAPACITY LOGIC ---
+            // 1 Trawler = 1800s. At 8s per bait, it covers 225 baits.
+            let trawler_count = 0;
+            if (trawler_choice === "Y") {
+                trawler_count = Math.ceil(bait_amt / 225);
+            }
+
             let sec_per_bait = (trawler_choice === "Y") ? 8 : 10;
             let total_seconds = bait_amt * sec_per_bait;
-            const hours = Math.floor(total_seconds / 3600);
-            const minutes = Math.floor((total_seconds % 3600) / 60);
-            const remain_seconds = total_seconds % 60;
+            const h = Math.floor(total_seconds / 3600);
+            const m = Math.floor((total_seconds % 3600) / 60);
+            const s = total_seconds % 60;
 
-            // Prices (converted to WL per 1 unit)
             const pBait = parseRatio(document.getElementById('prc_bait').value);
             const pTrawl = parseRatio(document.getElementById('prc_trawl').value);
 
             let total_expenses = 0;
             let total_income = 0;
-            let income_details_html = "";
-            let expense_details_html = "";
+            let income_html = "";
+            let expense_html = "";
 
             if (mode === 'uranium') {
-                // --- URANIUM EXPENSES ---
-                const total_bait_wl = bait_amt * pBait;
-                const trawler_amount = (trawler_choice === "Y") ? 0.005 * bait_amt : 0;
-                const trawler_cost = trawler_amount * pTrawl;
-                const det_qty = Math.floor(bait_amt * 0.05);
-                const det_cost = det_qty * parseRatio(document.getElementById('prc_detonator').value);
+                const costBait = bait_amt * pBait;
+                const costTrawl = trawler_count * pTrawl;
+                const det_qty = Math.ceil(bait_amt * 0.05); // Buy in whole units
+                const costDet = det_qty * parseRatio(document.getElementById('prc_detonator').value);
 
-                total_expenses = total_bait_wl + trawler_cost + det_cost;
+                total_expenses = costBait + costTrawl + costDet;
 
-                expense_details_html = `
-            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Baits (${bait_amt}):</span><span>-${total_bait_wl.toFixed(1)} WL</span></div>
-            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler (${trawler_amount}):</span><span>-${trawler_cost.toFixed(1)} WL</span></div>
-            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Detonators (${det_qty}):</span><span>-${det_cost.toFixed(1)} WL</span></div>
-        `;
+                expense_html = `
+                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Baits (${bait_amt}):</span><span>-${costBait.toFixed(1)} WL</span></div>
+                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler Buffs (${trawler_count}):</span><span>-${costTrawl.toFixed(1)} WL</span></div>
+                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Detonators (${det_qty}):</span><span>-${costDet.toFixed(1)} WL</span></div>
+                `;
 
-                // --- URANIUM INCOME (Thanksgiving Rod Logic) ---
-                // 1. Fish Breakdown (100% guarantee)
-                const qtyPerf = Math.floor(bait_amt * 0.1); // 10% Perfect
-                const qtyNorm = bait_amt - qtyPerf;          // 90% Normal
-
-                // 2. Weight Logic for Normal Fish (50lb average each baited fish)
-                const total_norm_lb = qtyNorm * 50;
-                const pFishNorm = parseRatio(document.getElementById('prc_fish_norm').value);
-                const valNorm = total_norm_lb * pFishNorm; // Assumes input is WL per 1 LB
-
-                // 3. Perfect Fish & Bonuses
+                // Income Logic (Thanksgiving Rod 100% Catch)
+                const qtyPerf = Math.floor(bait_amt * 0.1);
+                const qtyNorm = bait_amt - qtyPerf;
+                const lbsNorm = qtyNorm * 50; // Average 50lb
+                const valNorm = lbsNorm * parseRatio(document.getElementById('prc_fish_norm').value);
                 const valPerf = qtyPerf * parseRatio(document.getElementById('prc_fish_perf').value);
+
                 const qtyWhiz = Math.floor(bait_amt * 0.003);
                 const qtyBrain = Math.floor(bait_amt * 0.03);
-                const qtyOoze = Math.floor(bait_amt * 0.03);
-
                 const valWhiz = qtyWhiz * parseRatio(document.getElementById('prc_whizmo').value);
                 const valBrain = qtyBrain * parseRatio(document.getElementById('prc_brain').value);
-                const valOoze = qtyOoze * parseRatio(document.getElementById('prc_ooze').value);
 
-                total_income = valNorm + valPerf + valWhiz + valBrain + valOoze;
+                total_income = valNorm + valPerf + valWhiz + valBrain;
 
-                income_details_html = `
-            <div class="result-item"><span>Normal Fish (${qtyNorm} | ~${total_norm_lb}lb):</span><span>${valNorm.toFixed(1)} WL</span></div>
-            <div class="result-item"><span>Perfect Fish (${qtyPerf}):</span><span>${valPerf.toFixed(1)} WL</span></div>
-            <div class="result-item" style="border-top: 1px dashed #334155; margin-top: 5px; padding-top: 5px;">
-                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Brain Worms (${qtyBrain})</span><span>${valBrain.toFixed(1)} WL</span>
-            </div>
-            <div class="result-item">
-                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Ooze (${qtyOoze})</span><span>${valOoze.toFixed(1)} WL</span>
-            </div>
-            <div class="result-item">
-                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Whizmo (${qtyWhiz})</span><span>${valWhiz.toFixed(1)} WL</span>
-            </div>
-        `;
+                income_html = `
+                    <div class="result-item"><span>Normal Fish (${qtyNorm} | ~${lbsNorm}lb):</span><span>${valNorm.toFixed(1)} WL</span></div>
+                    <div class="result-item"><span>Perfect Fish (${qtyPerf}):</span><span>${valPerf.toFixed(1)} WL</span></div>
+                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em; border-top: 1px dashed #334155; margin-top: 5px;"><span>+ Extras (Whiz/Brain):</span><span>${(valWhiz + valBrain).toFixed(1)} WL</span></div>
+                `;
             } else {
-                // --- ROLE 8 LOGIC (Standard) ---
-                const total_bait_wl = bait_amt * pBait;
-                let trawler_cost = 0;
-                if (trawler_choice === "Y") {
-                    const trawlers_needed = Math.ceil(bait_amt / 225); // 1800s / 8s
-                    trawler_cost = trawlers_needed * pTrawl;
-                }
-                total_expenses = total_bait_wl + trawler_cost;
+                const costBait = bait_amt * pBait;
+                const costTrawl = trawler_count * pTrawl;
+                total_expenses = costBait + costTrawl;
 
-                expense_details_html = `
-            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Baits (${bait_amt}):</span><span>-${total_bait_wl.toFixed(1)} WL</span></div>
-            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler Buffs:</span><span>-${trawler_cost.toFixed(1)} WL</span></div>
-        `;
+                expense_html = `
+                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Baits (${bait_amt}):</span><span>-${costBait.toFixed(1)} WL</span></div>
+                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler Buffs (${trawler_count}):</span><span>-${costTrawl.toFixed(1)} WL</span></div>
+                `;
 
                 const qtyShrimp = Math.round(bait_amt * 0.075);
                 const qtyNaval = Math.round(bait_amt * 0.015);
@@ -280,43 +244,34 @@
                 const valNaval = qtyNaval * parseRatio(document.getElementById('prc_naval').value);
 
                 total_income = valShrimp + valNaval;
-                income_details_html = `
-            <div class="result-item"><span>Shrimp Lure (${qtyShrimp}):</span><span>${valShrimp.toFixed(1)} WL</span></div>
-            <div class="result-item"><span>Naval Mine (${qtyNaval}):</span><span>${valNaval.toFixed(1)} WL</span></div>
-        `;
+                income_html = `
+                    <div class="result-item"><span>Shrimp Lure (${qtyShrimp}):</span><span>${valShrimp.toFixed(1)} WL</span></div>
+                    <div class="result-item"><span>Naval Mine (${qtyNaval}):</span><span>${valNaval.toFixed(1)} WL</span></div>
+                `;
             }
 
-            const net_profit = total_income - total_expenses;
+            const profit = total_income - total_expenses;
 
-            // Render the report
             res.innerHTML = `
-        <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0; letter-spacing: 1px;">
-            ${mode === 'uranium' ? 'URANIUM FISHING REPORT' : 'ROLE 7 FISHING REPORT'}
-        </h3>
-        
-        <div class="result-item" style="color: #38bdf8; margin-bottom: 10px; font-family: sans-serif; font-weight: bold;">
-            <span>Total Time:</span><span>${hours}h ${minutes}m ${remain_seconds}s</span>
-        </div>
-
-        <div class="result-item" style="font-weight: bold; color: #f87171; border-top: 1px solid #334155; padding-top: 8px;">
-            <span>TOTAL EXPENSES:</span><span>${total_expenses.toFixed(1)} WL</span>
-        </div>
-        ${expense_details_html}
-        
-        <div class="result-item" style="font-weight: bold; color: #4ade80; margin-top: 10px; border-top: 1px solid #334155; padding-top: 8px;">
-            <span>TOTAL INCOME:</span><span>${total_income.toFixed(1)} WL</span>
-        </div>
-        ${income_details_html}
-
-        <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
-        
-        <div class="result-item" style="color: ${net_profit >= 0 ? '#4ade80' : '#f87171'}; font-weight: bold; font-size: 1.3em;">
-            <span>NET PROFIT:</span><span>${net_profit.toFixed(1)} WL</span>
-        </div>
-    `;
+                <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin: 0;">${mode.toUpperCase()} REPORT</h3>
+                <div class="result-item" style="color: #38bdf8; font-weight: bold; margin: 10px 0;">
+                    <span>Total Time:</span><span>${h}h ${m}m ${s}s</span>
+                </div>
+                <div class="result-item" style="font-weight: bold; color: #f87171; border-top: 1px solid #334155; padding-top: 8px;">
+                    <span>TOTAL EXPENSES:</span><span>${total_expenses.toFixed(1)} WL</span>
+                </div>
+                ${expense_html}
+                <div class="result-item" style="font-weight: bold; color: #4ade80; border-top: 1px solid #334155; margin-top: 10px; padding-top: 8px;">
+                    <span>TOTAL INCOME:</span><span>${total_income.toFixed(1)} WL</span>
+                </div>
+                ${income_html}
+                <hr style="border:0; border-top:1px solid #334155; margin:15px 0;">
+                <div class="result-item" style="color: ${profit >= 0 ? '#4ade80' : '#f87171'}; font-weight: bold; font-size: 1.2em;">
+                    <span>NET PROFIT:</span><span>${profit.toFixed(1)} WL</span>
+                </div>
+            `;
         }
 
-        // 3. Add Download Function
         function downloadResult() {
             const resultBox = document.getElementById('fsh_res');
             const exportBg = "#0f172a";
@@ -355,12 +310,14 @@
             const nav = document.getElementById('sideNav');
             const overlay = document.getElementById('overlay');
             const btn = document.querySelector('.menu-toggle');
+
             nav.classList.toggle('active');
             overlay.classList.toggle('active');
+
             btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
         }
 
-        // Navigation Active State
+        // Active Link Logic
         const navLinks = document.querySelectorAll('.nav-link');
         let currentPage = window.location.pathname.split('/').pop();
 
