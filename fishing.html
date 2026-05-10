@@ -86,30 +86,30 @@
             <label>Fishing Mode:</label>
             <select id="fishing_mode" onchange="toggleModeFields()"
                 style="width: 100%; padding: 10px; border-radius: 8px; background: #1e293b; color: white; border: 1px solid #334155;">
-                <option value="uranium">Uranium Fishing (Using Thanksgiving Rod)</option>
-                <option value="role7">Role 7 Fishing (With Fishing Fly)</option>
+                <option value="uranium">Uranium Glowing Lure Fishing (Using Thanksgiving Rod)</option>
+                <option value="role7">Fishing Fly Role 7 Fishing (Using Normal Rod)</option>
             </select>
         </div>
 
         <div class="input-grid">
             <div class="input-group">
-                <label>Amount of Baits:</label>
+                <label><img src="image/tackle_box/wiggly_worm.png" alt="Whizmo">Amount of Baits:</label>
                 <input type="number" id="bait_amt" value="200">
             </div>
             <div class="input-group">
-                <label>Bait Price (qty/wl):</label>
+                <label><img src="image/world_lock.png" alt="World Lock">Bait Price (qty/wl):</label>
                 <input type="text" id="prc_bait" value="20/1">
             </div>
 
             <div class="input-group">
-                <label>Use Trawler?</label>
+                <label><img src="image/fishing/trawler.png" alt="Trawler">Use Trawlerman's Friend?</label>
                 <select id="use_trawl">
-                    <option value="Y">Yes (8s per bait)</option>
-                    <option value="N">No (10s per bait)</option>
+                    <option value="Y">Yes (8s Per Bait)</option>
+                    <option value="N">No (10s Per Bait)</option>
                 </select>
             </div>
             <div class="input-group">
-                <label>Trawler Price (qty/wl):</label>
+                <label><img src="image/world_lock.png" alt="World Lock">Trawler Price (qty/wl):</label>
                 <input type="text" id="prc_trawl" value="1/9">
             </div>
 
@@ -220,16 +220,16 @@
 
                 expense_details_html = `
             <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Baits (${bait_amt}):</span><span>-${total_bait_wl.toFixed(1)} WL</span></div>
-            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler Fuel:</span><span>-${trawler_cost.toFixed(1)} WL</span></div>
+            <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler (${trawler_amount}):</span><span>-${trawler_cost.toFixed(1)} WL</span></div>
             <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Detonators (${det_qty}):</span><span>-${det_cost.toFixed(1)} WL</span></div>
         `;
 
                 // --- URANIUM INCOME (Thanksgiving Rod Logic) ---
                 // 1. Fish Breakdown (100% guarantee)
-                const qtyPerf = Math.floor(bait_amt * 0.075); // 7.5% Perfect
-                const qtyNorm = bait_amt - qtyPerf;          // 95% Normal
+                const qtyPerf = Math.floor(bait_amt * 0.1); // 10% Perfect
+                const qtyNorm = bait_amt - qtyPerf;          // 90% Normal
 
-                // 2. Weight Logic for Normal Fish (50lb average)
+                // 2. Weight Logic for Normal Fish (50lb average each baited fish)
                 const total_norm_lb = qtyNorm * 50;
                 const pFishNorm = parseRatio(document.getElementById('prc_fish_norm').value);
                 const valNorm = total_norm_lb * pFishNorm; // Assumes input is WL per 1 LB
@@ -291,7 +291,7 @@
             // Render the report
             res.innerHTML = `
         <h3 style="text-align:center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 0; letter-spacing: 1px;">
-            ${mode === 'uranium' ? 'URANIUM FISHING REPORT' : 'ROLE 8 PROFIT REPORT'}
+            ${mode === 'uranium' ? 'URANIUM FISHING REPORT' : 'ROLE 7 FISHING REPORT'}
         </h3>
         
         <div class="result-item" style="color: #38bdf8; margin-bottom: 10px; font-family: sans-serif; font-weight: bold;">
