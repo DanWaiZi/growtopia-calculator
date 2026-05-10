@@ -53,7 +53,7 @@
             <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png"
                         alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
             <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img
-                        src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i><span
+                        src="image/autoclave/autoclave_nav.png" alt="Autoclave"></i><span
                     class="nav-text">Autoclave</span></a>
         </div>
     </div>
@@ -63,22 +63,22 @@
 
         <div class="input-grid">
             <div class="input-group">
-                <label>Amount of Stations:</label>
+                <label><img src="image/science_station/science_nav.png" alt="Science Station">Amount of Stations:</label>
                 <input type="number" id="sci_amt" value="5300">
             </div>
             <div class="input-group">
-                <label>Fuel Pack Rate (qty/wl):</label>
+                <label><img src="image/world_lock.png" alt="World Lock">Fuel Pack Rate (qty/wl):</label>
                 <input type="text" id="sci_fuel_rate" value="2/1">
             </div>
             <div class="input-group">
-                <label>Convert to M-Chem?</label>
+                <label><img src="image/science_station/mchem.png" alt="Mysterious Chemical">Convert to Mysterious Chemical?</label>
                 <select id="make_mchem">
                     <option value="Y">Yes</option>
                     <option value="N">No</option>
                 </select>
             </div>
             <div class="input-group">
-                <label>Convert to Fuel?</label>
+                <label><img src="image/science_station/fuel_pack.png" alt="Fuel Pack">Convert to Fuel?</label>
                 <select id="make_fuel">
                     <option value="Y">Yes</option>
                     <option value="N">No</option>
@@ -91,9 +91,10 @@
         <button id="downloadBtn" onclick="downloadResult()">Download Result as Image</button>
 
         <p style="font-size:0.82em; color:#94a3b8; margin-top:12px; line-height:1.4;">
-            Note: the percentage for each chemical drop rate is obtained from <a
-                href="https://jscalc.io/calc/OubIbEPKk4CmLPV5" target="_blank" rel="noopener noreferrer"
-                style="color:#7dd3fc; text-decoration:underline;">jscalc.io</a>.
+            Note: The percentage for each chemical drop rate is obtained from <a
+                href="https://docs.google.com/spreadsheets/d/1QNI34VYA4BGdnPzBufnsj-pqYhC1RNoBbbrrIoRMPnY/edit?gid=0#gid=0"
+                target="_blank" rel="noopener noreferrer"
+                style="color:#7dd3fc; text-decoration:underline;">ZebraEatCake</a>.
         </p>
 
         <div id="sci_res" class="result-box"></div>

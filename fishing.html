@@ -72,7 +72,7 @@
                 <span class="nav-text">Tackle Box</span>
             </a>
             <a href="autoclave.html" class="nav-link" id="nav-autoclave">
-                <i><img src="image/auto_clave/autoclave_nav.png" alt="Autoclave"></i>
+                <i><img src="image/autoclave/autoclave_nav.png" alt="Autoclave"></i>
                 <span class="nav-text">Autoclave</span>
             </a>
         </div>
@@ -250,13 +250,13 @@
             <div class="result-item"><span>Normal Fish (${qtyNorm} | ~${total_norm_lb}lb):</span><span>${valNorm.toFixed(1)} WL</span></div>
             <div class="result-item"><span>Perfect Fish (${qtyPerf}):</span><span>${valPerf.toFixed(1)} WL</span></div>
             <div class="result-item" style="border-top: 1px dashed #334155; margin-top: 5px; padding-top: 5px;">
-                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Brain Worms (~${qtyBrain})</span><span>${valBrain.toFixed(1)} WL</span>
+                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Brain Worms (${qtyBrain})</span><span>${valBrain.toFixed(1)} WL</span>
             </div>
             <div class="result-item">
-                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Ooze (~${qtyOoze})</span><span>${valOoze.toFixed(1)} WL</span>
+                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Ooze (${qtyOoze})</span><span>${valOoze.toFixed(1)} WL</span>
             </div>
             <div class="result-item">
-                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Whizmo (~${qtyWhiz})</span><span>${valWhiz.toFixed(1)} WL</span>
+                <span style="font-size: 0.85em; color: #94a3b8;">Extra: Whizmo (${qtyWhiz})</span><span>${valWhiz.toFixed(1)} WL</span>
             </div>
         `;
             } else {
@@ -281,8 +281,8 @@
 
                 total_income = valShrimp + valNaval;
                 income_details_html = `
-            <div class="result-item"><span>Shrimp Lure (~${qtyShrimp}):</span><span>${valShrimp.toFixed(1)} WL</span></div>
-            <div class="result-item"><span>Naval Mine (~${qtyNaval}):</span><span>${valNaval.toFixed(1)} WL</span></div>
+            <div class="result-item"><span>Shrimp Lure (${qtyShrimp}):</span><span>${valShrimp.toFixed(1)} WL</span></div>
+            <div class="result-item"><span>Naval Mine (${qtyNaval}):</span><span>${valNaval.toFixed(1)} WL</span></div>
         `;
             }
 
