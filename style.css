@@ -558,9 +558,20 @@ button {
 }
 
 /* Add this to force inputs to stretch to the edges of the grid */
-.input-group input, 
+.input-group input,
 .input-group select {
-    width: 100%;           
-    box-sizing: border-box; 
-    display: block;        
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+}
+
+/* Only lock scroll on mobile (max-width: 768px) */
+@media screen and (max-width: 768px) {
+
+    body:has(.overlay.active),
+    body:has(.navbar.active) {
+        overflow: hidden !important;
+        height: 100vh;
+        touch-action: none;
+    }
 }
