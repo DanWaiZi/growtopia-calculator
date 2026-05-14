@@ -39,7 +39,6 @@
 
         /* --- MOBILE SCROLL LOCK --- */
         @media screen and (max-width: 768px) {
-
             body:has(.overlay.active),
             body:has(.navbar.active) {
                 overflow: hidden !important;
@@ -122,9 +121,10 @@
                 <input type="text" id="prc_trawl" value="1/9">
             </div>
 
+            <!-- Uranium Fields -->
             <div class="input-group ura-field">
                 <label><img src="image/fishing/whizmo_gizmo.png" alt="Whizmo">Whizmo (qty/wl):</label>
-                <input type="text" id="prc_whizmo" value="1/12">
+                <input type="text" id="prc_whizmo" value="1/13">
             </div>
             <div class="input-group ura-field">
                 <label><img src="image/fishing/brainworm.png" alt="Brainworm">Brainworm (qty/wl):</label>
@@ -132,7 +132,7 @@
             </div>
             <div class="input-group ura-field">
                 <label><img src="image/fishing/primordial_ooze.png" alt="Ooze">Primordial Ooze (qty/wl):</label>
-                <input type="text" id="prc_ooze" value="1/15">
+                <input type="text" id="prc_ooze" value="1/13">
             </div>
             <div class="input-group ura-field">
                 <label><img src="image/fishing/nuclear_detonator.png" alt="Detonator">Detonator (qty/wl):</label>
@@ -140,13 +140,14 @@
             </div>
             <div class="input-group ura-field">
                 <label><img src="image/fishing/normal_fish.png" alt="Fish">Normal Fish (qty/wl):</label>
-                <input type="text" id="prc_fish_norm" value="400/1">
+                <input type="text" id="prc_fish_norm" value="200/1">
             </div>
             <div class="input-group ura-field">
                 <label><img src="image/fishing/perfect_fish.png" alt="Perfect">Perfect Fish (qty/wl):</label>
-                <input type="text" id="prc_fish_perf" value="1/4">
+                <input type="text" id="prc_fish_perf" value="1/3">
             </div>
 
+            <!-- Role 7 Fields -->
             <div class="input-group role7-field hidden-group">
                 <label><img src="image/tackle_box/shrimp_lure.png" alt="Shrimp">Shrimp Lure (qty/wl):</label>
                 <input type="text" id="prc_shrimp" value="1/3">
@@ -192,7 +193,7 @@
             let trawler_count = (trawler_choice === "Y") ? Math.ceil(bait_amt / 225) : 0;
             let sec_per_bait = (trawler_choice === "Y") ? 8 : 10;
             let total_seconds = bait_amt * sec_per_bait;
-
+            
             const h = Math.floor(total_seconds / 3600);
             const m = Math.floor((total_seconds % 3600) / 60);
             const s = total_seconds % 60;
@@ -208,26 +209,49 @@
             if (mode === 'uranium') {
                 const costBait = bait_amt * pBait;
                 const costTrawl = trawler_count * pTrawl;
-                const det_qty = Math.ceil(bait_amt * 0.05);
+                const det_qty = Math.ceil(bait_amt * 0.05); 
                 const costDet = det_qty * parseRatio(document.getElementById('prc_detonator').value);
 
                 total_expenses = costBait + costTrawl + costDet;
 
                 expense_html = `
                     <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Baits (${bait_amt}):</span><span>-${costBait.toFixed(1)} WL</span></div>
-                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler (${trawler_count}):</span><span>-${costTrawl.toFixed(1)} WL</span></div>
+                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler Buffs (${trawler_count}):</span><span>-${costTrawl.toFixed(1)} WL</span></div>
                     <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Detonators (${det_qty}):</span><span>-${costDet.toFixed(1)} WL</span></div>
                 `;
 
-                const qtyPerf = Math.floor(bait_amt * 0.1);
-                const qtyNorm = bait_amt - qtyPerf;
-                const lbsNorm = qtyNorm * 50;
-                const valNorm = lbsNorm * parseRatio(document.getElementById('prc_fish_norm').value);
-                const valPerf = qtyPerf * parseRatio(document.getElementById('prc_fish_perf').value);
+                const baitsPerSpecies = bait_amt / 3;
+                const species = [
+                    { name: "Angel-Devil", normAvg: 35, perfLb: 60 },
+                    { name: "Maidmare", normAvg: 80, perfLb: 160 },
+                    { name: "Weird Manta", normAvg: 90, perfLb: 190 }
+                ];
+
+                let totalLbsNorm = 0;
+                let totalQtyPerf = 0;
+                let breakdownHtml = "";
+
+                species.forEach(fish => {
+                    const sQtyNorm = Math.round(baitsPerSpecies * 0.75);
+                    const sQtyPerf = Math.round(baitsPerSpecies * 0.25);
+                    const sLbsNorm = sQtyNorm * fish.normAvg;
+                    
+                    totalLbsNorm += sLbsNorm;
+                    totalQtyPerf += sQtyPerf;
+
+                    breakdownHtml += `
+                        <div style="font-size: 0.8em; color: #94a3b8; margin-left: 10px; border-left: 1px solid #334155; padding-left: 8px; margin-bottom: 4px;">
+                            <strong>${fish.name}:</strong> ${sQtyNorm} Norm (~${sLbsNorm}lb) | ${sQtyPerf} Perf
+                        </div>
+                    `;
+                });
+
+                const valNorm = totalLbsNorm * parseRatio(document.getElementById('prc_fish_norm').value);
+                const valPerf = totalQtyPerf * parseRatio(document.getElementById('prc_fish_perf').value);
 
                 const qtyWhiz = Math.floor(bait_amt * 0.003);
-                const qtyBrain = Math.floor(bait_amt * 0.03);
-                const qtyOoze = Math.floor(bait_amt * 0.03);
+                const qtyBrain = Math.floor(bait_amt * 0.025);
+                const qtyOoze = Math.floor(bait_amt * 0.025);
 
                 const valWhiz = qtyWhiz * parseRatio(document.getElementById('prc_whizmo').value);
                 const valBrain = qtyBrain * parseRatio(document.getElementById('prc_brain').value);
@@ -236,8 +260,10 @@
                 total_income = valNorm + valPerf + valWhiz + valBrain + valOoze;
 
                 income_html = `
-                    <div class="result-item"><span>Normal Fish (${qtyNorm} | ~${lbsNorm}lb):</span><span>${valNorm.toFixed(1)} WL</span></div>
-                    <div class="result-item"><span>Perfect Fish (${qtyPerf}):</span><span>${valPerf.toFixed(1)} WL</span></div>
+                    <div class="result-item"><span>Total Normal Fish (~${totalLbsNorm}lb):</span><span>${valNorm.toFixed(1)} WL</span></div>
+                    <div class="result-item"><span>Total Perfect Fish (${totalQtyPerf}):</span><span>${valPerf.toFixed(1)} WL</span></div>
+                    <div style="margin: 5px 0 10px 0;">${breakdownHtml}</div>
+                    
                     <div class="result-item" style="opacity: 0.8; font-size: 0.85em; border-top: 1px dashed #334155; margin-top: 5px; padding-top: 5px;">
                         <span>Whizmo (${qtyWhiz}):</span><span>${valWhiz.toFixed(1)} WL</span>
                     </div>
@@ -255,7 +281,7 @@
 
                 expense_html = `
                     <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Baits (${bait_amt}):</span><span>-${costBait.toFixed(1)} WL</span></div>
-                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler (${trawler_count}):</span><span>-${costTrawl.toFixed(1)} WL</span></div>
+                    <div class="result-item" style="opacity: 0.8; font-size: 0.85em;"><span>• Trawler Buffs (${trawler_count}):</span><span>-${costTrawl.toFixed(1)} WL</span></div>
                 `;
 
                 const qtyShrimp = Math.round(bait_amt * 0.075);
@@ -335,7 +361,6 @@
             btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
         }
 
-        // Active Link Logic
         const navLinks = document.querySelectorAll('.nav-link');
         let currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
