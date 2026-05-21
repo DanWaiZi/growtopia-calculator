@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="image/profile.jpg">
+    <title>Seed Recipe Tree</title>
+    <style>
+        .search-container {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #0f172a;
+            color: white;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .search-container input:focus {
+            border-color: var(--accent);
+        }
+
+        /* --- STABLE HORIZONTAL PURE FLEX TREE DIAGRAM --- */
+        .tree-container-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            padding: 40px 10px;
+        }
+
+        .tree-root {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            min-width: max-content;
+        }
+
+        /* Container that pairs the ingredients side-by-side with its output item */
+        .tree-node {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Container stacking the two ingredients vertically */
+        .node-parents {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Individual rows for each parent recipe branch */
+        .parent-branch-row {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        /* --- NATIVE ACCURATE CONNECTING LINES --- */
+        .line-connector-wrapper {
+            display: flex;
+            align-items: center;
+            width: 40px;
+            /* Uniform width for all line gaps */
+            align-self: stretch;
+        }
+
+        /* The vertical backbone spine line */
+        .spine-line {
+            width: 2px;
+            background-color: var(--border);
+            align-self: stretch;
+        }
+
+        /* Trims the top and bottom ends of the vertical spine lines cleanly */
+        .parent-branch-row:first-child .spine-line {
+            margin-top: 50%;
+        }
+
+        .parent-branch-row:last-child .spine-line {
+            margin-bottom: 50%;
+        }
+
+        /* The horizontal branch lines entering and leaving nodes */
+        .horizontal-line {
+            height: 2px;
+            background-color: var(--border);
+            flex-grow: 1;
+        }
+
+        /* Target Output Block Label Formatting */
+        .node-label {
+            background: #0f172a;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 18px;
+            color: var(--text);
+            font-weight: bold;
+            font-size: 0.95em;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+            z-index: 2;
+            min-width: 160px;
+            max-width: 200px;
+            word-wrap: break-word;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .node-label.active-node {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #94a3b8;
+            margin-top: 40px;
+            font-style: italic;
+        }
+
+        /* Autocomplete Dropdown Search Box */
+        .autocomplete-suggestions {
+            position: absolute;
+            background: #1e293b;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+            z-index: 100;
+            margin-top: 5px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #cbd5e1;
+        }
+
+        .suggestion-item:hover {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+    <div class="navbar" id="sideNav">
+        <div class="navbar-title">
+            <img src="image/title.png" alt="Growtopia" class="navbar-logo">
+            <span class="navbar-title-text">Calculator</span>
+            <img src="image/profile.jpg" alt="Profile" class="navbar-profile">
+            <span class="subtitle">by TDoomGT</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link" id="nav-home"><i><img src="image/home.png" alt="Home"></i><span
+                    class="nav-text">Home</span></a>
+            <a href="recipe.html" class="nav-link" id="nav-recipe"><i><img src="image/science_station/science_nav.png"
+                        alt="Recipe"></i><span class="nav-text">Seed Recipe</span></a>
+            <a href="fishing.html" class="nav-link" id="nav-fishing"><i><img src="image/fishing/fishing_nav.png"
+                        alt="Fishing"></i><span class="nav-text">Fishing</span></a>
+            <a href="pepper.html" class="nav-link" id="nav-pepper"><i><img src="image/pepper_recycling/pepper_nav.png"
+                        alt="Pepper"></i><span class="nav-text">Pepper</span></a>
+            <a href="science.html" class="nav-link" id="nav-science"><i><img src="image/science_station/science_nav.png"
+                        alt="Science"></i><span class="nav-text">Science Station</span></a>
+            <a href="tackle.html" class="nav-link" id="nav-tackle"><i><img src="image/tackle_box/tackle_nav.png"
+                        alt="Tackle"></i><span class="nav-text">Tackle Box</span></a>
+            <a href="autoclave.html" class="nav-link" id="nav-autoclave"><i><img src="image/autoclave/autoclave_nav.png"
+                        alt="Autoclave"></i><span class="nav-text">Autoclave</span></a>
+        </div>
+    </div>
+
+    <div class="container" style="width: 900px; max-width: 95%;">
+        <h1>Seed Recipe Tree</h1>
+        <p style="text-align: center; color: #94a3b8; font-size: 0.95em; margin-top: -10px; margin-bottom: 22px;">
+            Search for an item to visualize its formula path flowing from left (ingredients) to right (result).
+        </p>
+
+        <div style="position: relative; margin-bottom: 20px;">
+            <div class="search-container">
+                <input type="text" id="itemSearch" placeholder="Type an item name (e.g., Disco Ball, Dungeon Door)..."
+                    autocomplete="off">
+            </div>
+            <div id="suggestions" class="autocomplete-suggestions" style="display: none;"></div>
+        </div>
+
+        <div id="treeContainer" class="result-box"
+            style="display: block; min-height: 300px; background: #1e293b; border-color: var(--border);">
+            <div class="empty-msg" id="emptyMsg">Search and select an item above to map out its recipe branch lines.
+            </div>
+            <div class="tree-container-wrapper">
+                <div id="treeRoot" class="tree-root"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database Object 
+        const recipes = {
+            // Tier 1
+            "dirt": { tier: 1 }, "lava": { tier: 1 }, "rock": { tier: 1 }, "cave background": { tier: 1 }, "sand": { tier: 1 }, "martian soil": { tier: 1 }, "mars rock": { tier: 1 },
+            // Tier 2
+            "door": { tier: 2, parents: ["dirt", "cave background"] }, "grass": { tier: 2, parents: ["dirt", "rock"] }, "wood block": { tier: 2, parents: ["dirt", "lava"] }, "glass pane": { tier: 2, parents: ["rock", "lava"] }, "sign": { tier: 2, parents: ["cave background", "rock"] }, "lava rock": { tier: 2, parents: ["lava", "cave background"] }, "martian tree": { tier: 2, parents: ["martian soil", "mars rock"] },
+            // Tier 3
+            "wooden background": { tier: 3, parents: ["grass", "door"] }, "pointy sign": { tier: 3, parents: ["door", "sign"] }, "crappy sign": { tier: 3, parents: ["door", "dirt"] }, "daisy": { tier: 3, parents: ["grass", "dirt"] }, "wooden platform": { tier: 3, parents: ["wood block", "grass"] }, "rock background": { tier: 3, parents: ["rock", "door"] }, "bricks": { tier: 3, parents: ["rock", "grass"] }, "rose": { tier: 3, parents: ["grass", "lava"] }, "super crate box": { tier: 3, parents: ["dirt", "sign"] }, "mushroom": { tier: 3, parents: ["cave background", "grass"] }, "cargo shorts": { tier: 3, parents: ["dirt", "wood block"] }, "amber glass": { tier: 3, parents: ["dirt", "glass pane"] }, "happy joy plaque": { tier: 3, parents: ["door", "cave background"] }, "torch": { tier: 3, parents: ["sign", "lava"] }, "wheat": { tier: 3, parents: ["grass", "sand"] },
+            // Tier 4
+            "danger sign": { tier: 4, parents: ["lava", "pointy sign"] }, "window": { tier: 4, parents: ["glass pane", "wooden background"] }, "shallot mustache": { tier: 4, parents: ["mushroom", "grass"] }, "grey block": { tier: 4, parents: ["bricks", "rock"] }, "black block": { tier: 4, parents: ["bricks", "cave background"] }, "white block": { tier: 4, parents: ["bricks", "mushroom"] }, "red block": { tier: 4, parents: ["bricks", "lava"] }, "yellow block": { tier: 4, parents: ["bricks", "daisy"] }, "green block": { tier: 4, parents: ["bricks", "grass"] }, "aqua block": { tier: 4, parents: ["bricks", "glass pane"] }, "brown block": { tier: 4, parents: ["bricks", "dirt"] }, "poppy": { tier: 4, parents: ["rose", "daisy"] }, "flowery wallpaper": { tier: 4, parents: ["wooden background", "daisy"] }, "wooden table": { tier: 4, parents: ["wooden platform", "wood block"] }, "messy brown hair": { tier: 4, parents: ["crappy sign", "grass"] }, "mud glob": { tier: 4, parents: ["daisy", "dirt"] }, "stinky sock": { tier: 4, parents: ["mushroom", "dirt"] }, "tan shirt": { tier: 4, parents: ["rock background", "dirt"] },
+            // Tier 5
+            "dungeon door": { tier: 5, parents: ["door", "window"] }, "shades": { tier: 5, parents: ["black block", "glass pane"] }, "green shirt": { tier: 5, parents: ["grass", "green block"] }, "tuxedo": { tier: 5, parents: ["grey block", "rose"] }, "brown shoes": { tier: 5, parents: ["cave background", "brown block"] }, "boots": { tier: 5, parents: ["rock", "black block"] }, "red hair": { tier: 5, parents: ["grass", "red block"] }, "jeans": { tier: 5, parents: ["aqua block", "rock"] }, "wooden window": { tier: 5, parents: ["window", "wooden background"] }, "top hat": { tier: 5, parents: ["black block", "mushroom"] }, "brown hair": { tier: 5, parents: ["dirt", "brown block"] }, "black pants": { tier: 5, parents: ["door", "black block"] }, "green skirt": { tier: 5, parents: ["poppy", "green block"] }, "blonde bombshell": { tier: 5, parents: ["yellow block", "grass"] }, "toilet": { tier: 5, parents: ["crappy sign", "brown block"] }, "painting: yerfdog": { tier: 5, parents: ["wooden background", "white block"] }, "painting: dink duck": { tier: 5, parents: ["yellow block", "wooden background"] }, "brick background": { tier: 5, parents: ["bricks", "black block"] }, "red riding hood": { tier: 5, parents: ["red block", "mushroom"] }, "hot head": { tier: 5, parents: ["lava", "red block"] }, "cyclopean visor": { tier: 5, parents: ["window", "red block"] }, "biker stache": { tier: 5, parents: ["brown block", "grass"] }, "x-ray specs": { tier: 5, parents: ["glass pane", "white block"] }, "gold-rimmed glasses": { tier: 5, parents: ["yellow block", "window"] }, "death spikes": { tier: 5, parents: ["danger sign", "rock background"] }, "orange block": { tier: 5, parents: ["bricks", "poppy"] }, "bush": { tier: 5, parents: ["poppy", "rose"] }, "stripey wallpaper": { tier: 5, parents: ["green block", "aqua block"] }, "referee shirt": { tier: 5, parents: ["black block", "white block"] }, "flashlight": { tier: 5, parents: ["black block", "yellow block"] }, "rooster hat": { tier: 5, parents: ["yellow block", "white block"] }, "santa hat": { tier: 5, parents: ["red block", "white block"] }, "santa pants": { tier: 5, parents: ["lava", "grey block"] }, "santa vest": { tier: 5, parents: ["lava", "white block"] }, "evil bricks": { tier: 5, parents: ["lava", "black block"] }, "long brown hair": { tier: 5, parents: ["wooden table", "grass"] }, "stone wall": { tier: 5, parents: ["grey block", "rock"] }, "lovely pink dress": { tier: 5, parents: ["flowery wallpaper", "mushroom"] }, "glass block": { tier: 5, parents: ["aqua block", "glass pane"] }, "sheet music: blank": { tier: 5, parents: ["super crate box", "white block"] }, "red bricks": { tier: 5, parents: ["red block", "bricks"] }, "pencil": { tier: 5, parents: ["yellow block", "wood block"] }, "worthless rags": { tier: 5, parents: ["dirt", "mud glob"] }, "barn block": { tier: 5, parents: ["super crate box", "red block"] }, "red wood wall": { tier: 5, parents: ["red block", "wooden background"] },
+            // Tier 6
+            "baseball cap": { tier: 6, parents: ["bush", "wooden platform"] }, "portcullis": { tier: 6, parents: ["dungeon door", "death spikes"] }, "olde timey radio": { tier: 6, parents: ["toilet", "dungeon door"] }, "spikey hair": { tier: 6, parents: ["death spikes", "yellow block"] }, "afro": { tier: 6, parents: ["bush", "black block"] }, "patent leather shoes": { tier: 6, parents: ["brick background", "grey block"] }, "green blouse": { tier: 6, parents: ["bush", "green block"] }, "briefcase": { tier: 6, parents: ["brown block", "stripey wallpaper"] }, "sword": { tier: 6, parents: ["death spikes", "rock background"] }, "red coat": { tier: 6, parents: ["red block", "bush"] }, "devil horns": { tier: 6, parents: ["lava", "death spikes"] }, "big glasses": { tier: 6, parents: ["window", "wooden window"] }, "blueberry": { tier: 6, parents: ["bush", "mushroom"] }, "burglar mask": { tier: 6, parents: ["cave background", "brick background"] }, "froghat": { tier: 6, parents: ["aqua block", "bush"] }, "wooden chair": { tier: 6, parents: ["wooden platform", "toilet"] }, "house entrance": { tier: 6, parents: ["dungeon door", "door"] }, "bathtub": { tier: 6, parents: ["toilet", "white block"] }, "white beard": { tier: 6, parents: ["white block", "bush"] }, "asbestos boots": { tier: 6, parents: ["evil bricks", "yellow block"] }, "cuzco wall mount": { tier: 6, parents: ["painting: yerfdog", "dungeon door"] }, "polka dot block": { tier: 6, parents: ["white block", "orange block"] }, "checker wallpaper": { tier: 6, parents: ["window", "evil bricks"] }, "viking helmet": { tier: 6, parents: ["stone wall", "pointy sign"] }, "pigtails": { tier: 6, parents: ["orange block", "daisy"] }, "cactus": { tier: 6, parents: ["death spikes", "bush"] }, "dresser": { tier: 6, parents: ["wooden table", "dungeon door"] }, "big old sideways arrow": { tier: 6, parents: ["orange block", "pointy sign"] }, "sheet music: piano note": { tier: 6, parents: ["sheet music: blank", "green block"] }, "sheet music: drums": { tier: 6, parents: ["sheet music: blank", "brown block"] }, "barrel": { tier: 6, parents: ["dungeon door", "super crate box"] }, "grimstone": { tier: 6, parents: ["grass", "stone wall"] }, "biohazard sign": { tier: 6, parents: ["danger sign", "orange block"] }, "gambler's visor": { tier: 6, parents: ["green block", "glass block"] }, "water bucket": { tier: 6, parents: ["toilet", "aqua block"] }, "barn door": { tier: 6, parents: ["door", "barn block"] }, "tomato": { tier: 6, parents: ["red bricks", "mud glob"] }, "sidewalk": { tier: 6, parents: ["red bricks", "grey block"] }, "secret of growtopia": { tier: 6, parents: ["sheet music: blank", "secret passage"] }, "exclamation sign": { tier: 6, parents: ["barn block", "martian tree"] },
+            // Tier 7
+            "just one boxing glove": { tier: 7, parents: ["red block", "blueberry"] }, "pickaxe": { tier: 7, parents: ["portcullis", "cave background"] }, "brainwave capacitor": { tier: 7, parents: ["olde timey radio", "yellow block"] }, "tv head": { tier: 7, parents: ["olde timey radio", "wood block"] }, "blue block": { tier: 7, parents: ["bricks", "blueberry"] }, "picket fence": { tier: 7, parents: ["wooden chair", "white block"] }, "long black hair": { tier: 7, parents: ["black block", "portcullis"] }, "bed": { tier: 7, parents: ["wooden chair", "mushroom"] }, "snorkel": { tier: 7, parents: ["bathtub", "glass pane"] }, "clown nose": { tier: 7, parents: ["tomato", "happy joy plaque"] }, "clown pants": { tier: 7, parents: ["polka dot block", "happy joy plaque"] }, "rubber ducky": { tier: 7, parents: ["bathtub", "painting: dink duck"] }, "tie dyed shirt": { tier: 7, parents: ["polka dot block", "checker wallpaper"] }, "sexy boxers": { tier: 7, parents: ["polka dot block", "rose"] }, "monster feet": { tier: 7, parents: ["devil horns", "green block"] }, "bubble wrap": { tier: 7, parents: ["blueberry", "glass pane"] }, "sandstone": { tier: 7, parents: ["cactus", "dirt"] }, "plumbing": { tier: 7, parents: ["bathtub", "green block"] }, "big old down arrow": { tier: 7, parents: ["pointy sign", "devil horns"] }, "sheet music: sharp piano": { tier: 7, parents: ["sheet music: piano note", "death spikes"] }, "sheet music: flat piano": { tier: 7, parents: ["sheet music: piano note", "rock"] }, "secret passage": { tier: 7, parents: ["wood block", "big old sideways arrow"] }, "lattice background": { tier: 7, parents: ["wooden chair", "wooden background"] }, "tangram block (a to l)": { tier: 7, parents: ["checker wallpaper", "grey block"] }, "baseball bat": { tier: 7, parents: ["house entrance", "sign"] }, "apple": { tier: 7, parents: ["red bricks", "blueberry"] }, "school desk": { tier: 7, parents: ["orange block", "wooden chair"] }, "grey hair bun": { tier: 7, parents: ["olde timey radio", "grey block"] }, "zombie-stompin' boots": { tier: 7, parents: ["grimstone", "death spikes"] }, "barky's mask": { tier: 7, parents: ["barrel", "painting: yerfdog"] }, "wrought-iron fence": { tier: 7, parents: ["portcullis", "pencil"] }, "seaweed": { tier: 7, parents: ["bush", "water bucket"] }, "ancient stone gate": { tier: 7, parents: ["sandstone wall", "portcullis"] }, "street sign": { tier: 7, parents: ["pointy sign", "sidewalk"] }, "tenement building": { tier: 7, parents: ["house entrance", "garbage"] }, "gargoyle": { tier: 7, parents: ["grimstone", "devil horns"] },
+            // Tier 8
+            "ski cap": { tier: 8, parents: ["blue block", "mushroom"] }, "purple block": { tier: 8, parents: ["red block", "blue block"] }, "note block": { tier: 8, parents: ["blue block", "olde timey radio"] }, "checkered pajamas": { tier: 8, parents: ["checker wallpaper", "bed"] }, "peg leg": { tier: 8, parents: ["rubber ducky", "wooden table"] }, "music box": { tier: 8, parents: ["rubber ducky", "olde timey radio"] }, "dreamstone block": { tier: 8, parents: ["bed", "orange block"] }, "das red balloon": { tier: 8, parents: ["bubble wrap", "red block"] }, "blue star wallpaper": { tier: 8, parents: ["blue block", "amber glass"] }, "wall like an egyptian": { tier: 8, parents: ["sandstone", "mud glob"] }, "backpack": { tier: 8, parents: ["bed", "super crate box"] }, "red sweatpants": { tier: 8, parents: ["big old down arrow", "white block"] }, "sheet music: bass note": { tier: 8, parents: ["sheet music: blank", "blue block"] }, "copper plumbing": { tier: 8, parents: ["plumbing", "orange block"] }, "granite block": { tier: 8, parents: ["sandstone", "stone wall"] }, "iron bars": { tier: 8, parents: ["plumbing", "death spikes"] }, "acid": { tier: 8, parents: ["plumbing", "cactus"] }, "antidote": { tier: 8, parents: ["blueberry", "apple"] }, "military radio": { tier: 8, parents: ["biohazard sign", "sheet music: sharp piano"] }, "screen door": { tier: 8, parents: ["lattice background", "door"] }, "pitchfork": { tier: 8, parents: ["wrought-iron fence", "crappy sign"] }, "sugar cane": { tier: 8, parents: ["seaweed", "happy joy plaque"] }, "western building": { tier: 8, parents: ["sand", "tenement building"] }, "rustic fence": { tier: 8, parents: ["crappy sign", "picket fence"] }, "for sale sign": { tier: 8, parents: ["street sign", "red block"] }, "gem sign": { tier: 8, parents: ["street sign", "yellow block"] },
+            // Tier 9
+            "purple thong": { tier: 9, parents: ["purple block", "danger sign"] }, "purple bikini top": { tier: 9, parents: ["purple block", "rose"] }, "steel block": { tier: 9, parents: ["purple block", "portcullis"] }, "purple mohawk": { tier: 9, parents: ["picket fence", "purple block"] }, "rainbow block": { tier: 9, parents: ["purple block", "orange block"] }, "monocle": { tier: 9, parents: ["music box", "window"] }, "poodle skirt": { tier: 9, parents: ["das red balloon", "dreamstone block"] }, "cloudstone block": { tier: 9, parents: ["dreamstone block", "aqua block"] }, "lollipop": { tier: 9, parents: ["purple block", "blueberry"] }, "table lamp": { tier: 9, parents: ["blue star wallpaper", "wooden table"] }, "race start flag": { tier: 9, parents: ["blue star wallpaper", "pointy sign"] }, "big old up arrow": { tier: 9, parents: ["das red balloon", "pointy sign"] }, "sheet music: sharp bass": { tier: 9, parents: ["sheet music: bass note", "death spikes"] }, "sheet music: flat bass": { tier: 9, parents: ["sheet music: bass note", "rock"] }, "marble block": { tier: 9, parents: ["granite block", "dreamstone block"] }, "jail door": { tier: 9, parents: ["iron bars", "portcullis"] }, "toxic waste barrel": { tier: 9, parents: ["acid", "barrel"] }, "card block": { tier: 9, parents: ["tangram block", "das red balloon"] }, "showgirl leggings": { tier: 9, parents: ["blue star wallpaper", "lattice background"] }, "showgirl headdress": { tier: 9, parents: ["blue star wallpaper", "portcullis"] }, "neon lights": { tier: 9, parents: ["glass block", "purple block"] }, "velvet rope": { tier: 9, parents: ["copper plumbing", "big old sideways arrow"] }, "western banner": { tier: 9, parents: ["western building", "sign"] }, "saloon doors": { tier: 9, parents: ["western building", "door"] }, "cutaway building": { tier: 9, parents: ["western building", "tenement building"] }, "cash register": { tier: 9, parents: ["military radio", "gargoyle"] }, "display box": { tier: 9, parents: ["glass block", "music box"] },
+            // Tier 10
+            "boombox": { tier: 10, parents: ["steel block", "black block"] }, "jetpack": { tier: 10, parents: ["lava", "steel block"] }, "robot wants dubstep": { tier: 10, parents: ["note block", "steel block"] }, "golden block": { tier: 10, parents: ["steel block", "yellow block"] }, "the darkness": { tier: 10, parents: ["steel block", "evil bricks"] }, "magic bacon wallpaper": { tier: 10, parents: ["rainbow block", "house entrance"] }, "plate mail": { tier: 10, parents: ["portcullis", "steel block"] }, "ice": { tier: 10, parents: ["cloudstone block", "glass pane"] }, "race end flag": { tier: 10, parents: ["race start flag", "checker wallpaper"] }, "checkpoint": { tier: 10, parents: ["cloudstone block", "bubble wrap"] }, "blue wristband": { tier: 10, parents: ["race start flag", "blueberry"] }, "ladder": { tier: 10, parents: ["big old up arrow", "wooden platform"] }, "bookcase": { tier: 10, parents: ["rainbow block", "dresser"] }, "red sportsball jersey": { tier: 10, parents: ["big old up arrow", "white block"] }, "pinball bumper": { tier: 10, parents: ["blue star wallpaper", "steel block"] }, "steel girder": { tier: 10, parents: ["steel block", "lattice background"] }, "mailbox": { tier: 10, parents: ["steel block", "big old up arrow"] }, "clouds": { tier: 10, parents: ["cloudstone block", "glass block"] }, "password door": { tier: 10, parents: ["jail door", "steel block"] }, "roulette wheel": { tier: 10, parents: ["card block", "cuzco wall mount"] }, "farmgirl hair": { tier: 10, parents: ["velvet rope", "poppy"] }, "science station": { tier: 10, parents: ["toxic waste barrel", "military radio"] }, "streetlamp": { tier: 10, parents: ["neon lights", "plumbing"] }, "cowboy hat": { tier: 10, parents: ["sand", "big old up arrow"] }, "sheriff's vest": { tier: 10, parents: ["jail door", "blue star wallpaper"] }, "shop sign": { tier: 10, parents: ["western banner", "pastel blue block"] }, "winter gift": { tier: "Winterfest", parents: ["sheet music: flat bass", "sheet music: bass note"] },
+            // Tier 11
+            "disco ball": { tier: 11, parents: ["window", "boombox"] }, "fireplace": { tier: 11, parents: ["evil bricks", "golden block"] }, "ninja mask": { tier: 11, parents: ["the darkness", "black block"] }, "ninja tights": { tier: 11, parents: ["the darkness", "purple block"] }, "ninja vest": { tier: 11, parents: ["the darkness", "blue block"] }, "ninja slippers": { tier: 11, parents: ["the darkness", "brown block"] }, "high tech wall": { tier: 11, parents: ["robot wants dubstep", "black block"] }, "high tech block": { tier: 11, parents: ["robot wants dubstep", "grey block"] }, "fishnet stockings": { tier: 11, parents: ["the darkness", "boombox"] }, "art wall": { tier: 11, parents: ["magic bacon wallpaper", "rainbow block"] }, "venus guytrap": { tier: 11, parents: ["magic bacon wallpaper", "daisy"] }, "air robinsons": { tier: 11, parents: ["race end flag", "bubble wrap"] }, "baneful mask": { tier: 11, parents: ["the darkness", "plumbing"] }, "fishbowl": { tier: 11, parents: ["ice", "wooden window"] }, "growbeats headphones": { tier: 11, parents: ["boombox", "note block"] }, "pinball sproinger": { tier: 11, parents: ["pinball bumper", "mushroom"] }, "treasure chest": { tier: 11, parents: ["golden block", "dresser"] }, "golden sword": { tier: 11, parents: ["golden block", "picket fence"] }, "elvish longbow": { tier: 11, parents: ["ladder", "big old sideways arrow"] }, "blackrock wall": { tier: 11, parents: ["the darkness", "lava rock"] }, "cybernetic arm": { tier: 11, parents: ["steel girder", "boombox"] }, "traffic barricade": { tier: 11, parents: ["table lamp", "ladder"] }, "flipping coin": { tier: 11, parents: ["golden block", "sheet music: drums"] }, "showgirl top": { tier: 11, parents: ["blue star wallpaper", "ice"] }, "chicken": { tier: 11, parents: ["rubber ducky", "clouds"] }, "blue mailbox": { tier: 11, parents: ["mailbox", "blue block"] }, "fire escape": { tier: 11, parents: ["steel girder", "ladder"] },
+            // Tiers 12-16
+            "ruby slippers": { tier: 12, parents: ["red block", "disco ball"] }, "mystery block": { tier: 12, parents: ["steel block", "disco ball"] }, "golden halo": { tier: 12, parents: ["yellow block", "disco ball"] }, "fairy crown": { tier: 12, parents: ["grass", "disco ball"] }, "fairy dress": { tier: 12, parents: ["aqua block", "disco ball"] }, "fairy skirt": { tier: 12, parents: ["daisy", "disco ball"] }, "fairy slippers": { tier: 12, parents: ["poppy", "disco ball"] }, "fairy wings": { tier: 12, parents: ["flowery wallpaper", "disco ball"] }, "fairy wand": { tier: 12, parents: ["wood block", "disco ball"] }, "sack o' joy": { tier: 12, parents: ["note block", "disco ball"] }, "saturday night vest": { tier: 12, parents: ["golden block", "disco ball"] }, "white bellbottoms": { tier: 12, parents: ["white block", "disco ball"] }, "rainbow wig": { tier: 12, parents: ["rainbow block", "fireplace"] }, "cannon": { tier: 12, parents: ["fireplace", "black block"] }, "chandelier": { tier: 12, parents: ["fireplace", "golden block"] }, "stove": { tier: 12, parents: ["lava rock", "high tech block"] }, "time-space rupture": { tier: 12, parents: ["high tech wall", "house entrance"] }, "space helmet": { tier: 12, parents: ["fishbowl", "checkpoint"] }, "orange portal": { tier: 12, parents: ["high tech wall", "orange block"] }, "blue portal": { tier: 12, parents: ["high tech block", "blue block"] }, "dragon gate": { tier: 12, parents: ["venus guytrap", "portcullis"] }, "wizard's robe": { tier: 12, parents: ["purple wallpaper", "happy joy plaque"] }, "chalkboard": { tier: 12, parents: ["grey wallpaper", "painting: yerfdog"] }, "crimson eagle wings": { tier: 12, parents: ["red wallpaper", "blue wallpaper"] }, "skeleton": { tier: 12, parents: ["grey wallpaper", "ice"] }, "hammer pants": { tier: 12, parents: ["purple wallpaper", "tangram block (any)"] }, "combat vest": { tier: 12, parents: ["green wallpaper", "aqua wallpaper"] }, "dice block": { tier: 12, parents: ["art wall", "grey block"] }, "slot machine": { tier: 12, parents: ["roulette wheel", "yellow wallpaper"] }, "zeta reticulant mask": { tier: 12, parents: ["military radio", "grey wallpaper"] }, "refrigerator": { tier: 12, parents: ["ice", "treasure chest"] }, "sproingy eyes": { tier: 12, parents: ["apple", "pinball sproinger"] }, "overalls": { tier: 12, parents: ["barrel", "blue wallpaper"] }, "achievement block": { tier: 12, parents: ["art wall", "wood block"] }, "war paint": { tier: 12, parents: ["tomato", "fire escape"] }, "fire hydrant": { tier: 12, parents: ["red wallpaper", "water bucket"] }, "gothic building": { tier: 12, parents: ["orange wallpaper", "blackrock wall"] }, "campfire": { tier: 12, parents: ["fireplace", "cactus"] }, "surgical tool": { tier: 12, parents: ["high tech wall", "biohazard sign"] }, "open sign": { tier: 12, parents: ["street sign", "white wallpaper"] },
+            "pirate hat": { tier: 13, parents: ["cannon", "mushroom"] }, "eyepatch": { tier: 13, parents: ["cannon", "cuzco wall mount"] }, "hoop earrings": { tier: 13, parents: ["golden halo", "poppy"] }, "blueberry pie": { tier: 13, parents: ["stove", "blueberry"] }, "chef hat": { tier: 13, parents: ["stove", "mushroom"] }, "apron": { tier: 13, parents: ["stove", "checker wallpaper"] }, "spatula": { tier: 13, parents: ["stove", "picket fence"] }, "cigar": { tier: 13, parents: ["time-space rupture", "lava rock"] }, "tommygun": { tier: 13, parents: ["time-space rupture", "death spikes"] }, "pinstripe pants": { tier: 13, parents: ["time-space rupture", "stripey wallpaper"] }, "pinstripe suit": { tier: 13, parents: ["time-space rupture", "rose"] }, "fedora": { tier: 13, parents: ["time-space rupture", "black block"] }, "dame's fedora": { tier: 13, parents: ["time-space rupture", "poppy"] }, "blue headband": { tier: 13, parents: ["golden halo", "race start flag"] }, "victrola": { tier: 13, parents: ["time-space rupture", "olde timey radio"] }, "art deco block": { tier: 13, parents: ["time-space rupture", "grey block"] }, "flapper dress": { tier: 13, parents: ["time-space rupture", "lava"] }, "flapper headband": { tier: 13, parents: ["time-space rupture", "daisy"] }, "bulletin board": { tier: 13, parents: ["lattice background", "chalkboard"] }, "headsman's axe": { tier: 13, parents: ["pencil", "dragon gate"] }, "tombstone": { tier: 13, parents: ["skeleton", "granite block"] }, "ripper wings": { tier: 13, parents: ["chandelier", "devil horns"] }, "flaming skull mask": { tier: 13, parents: ["skeleton", "torch"] }, "cow": { tier: 13, parents: ["refrigerator", "brown block"] }, "laboratory": { tier: 13, parents: ["refrigerator", "biohazard sign"] }, "parasol": { tier: 13, parents: ["clouds", "fire hydrant"] }, "straw hat": { tier: 13, parents: ["wheat", "golden halo"] }, "tramsmog crystal": { tier: 13, parents: ["achievement block", "purple block"] }, "mannequin": { tier: 13, parents: ["skeleton", "barrel"] }, "yeonnalligi": { tier: "Winterfest", parents: ["blue portal", "orange portal"] }, "holiday gift box": { tier: "Winterfest", parents: ["slot machine", "treasure chest"] },
+            "tavern sign": { tier: 14, parents: ["art deco block", "sign"] }, "scoreboard": { tier: 14, parents: ["table lamp", "bulletin board"] }, "rocket thruster": { tier: 14, parents: ["e-z cook oven", "big old up arrow"] }, "cow cube": { tier: 14, parents: ["cow", "barn block"] },
+            "whatchamacallit": { tier: 15, parents: ["laboratory", "compu panel"] }, "ice cube": { tier: 15, parents: ["cow cube", "ice"] },
+            "frozen dna fragment a": { tier: 16, parents: ["cuzco wall mount", "ice cube"] }, "frozen dna fragment b": { tier: 16, parents: ["buffalo", "ice cube"] }
+        };
+
+        const searchInput = document.getElementById('itemSearch');
+        const suggestionsBox = document.getElementById('suggestions');
+        const treeRoot = document.getElementById('treeRoot');
+        const emptyMsg = document.getElementById('emptyMsg');
+
+        function capitalize(str) {
+            return str.replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        // Input search filtering listener
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
+            suggestionsBox.innerHTML = '';
+
+            if (!query) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            const filteredKeys = Object.keys(recipes).filter(key => key.includes(query));
+
+            if (filteredKeys.length === 0) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            filteredKeys.forEach(key => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.textContent = capitalize(key);
+                div.addEventListener('click', () => {
+                    searchInput.value = capitalize(key);
+                    suggestionsBox.style.display = 'none';
+                    generateTree(key);
+                });
+                suggestionsBox.appendChild(div);
+            });
+
+            suggestionsBox.style.display = 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target !== searchInput) suggestionsBox.style.display = 'none';
+        });
+
+        // Recursive horizontal native structural tree compiler
+        function buildTreeNodeHTML(itemName, isRootNode = false) {
+            const cleanName = itemName.toLowerCase().trim();
+            const itemData = recipes[cleanName] || {};
+
+            const nodeElement = document.createElement('div');
+            nodeElement.className = 'tree-node';
+
+            // If it has cross-breeding ingredients, compile them on the left
+            if (itemData.parents && itemData.parents.length === 2) {
+                const parentsContainer = document.createElement('div');
+                parentsContainer.className = 'node-parents';
+
+                itemData.parents.forEach((parentName) => {
+                    const branchRow = document.createElement('div');
+                    branchRow.className = 'parent-branch-row';
+
+                    // Build nested child structures recursively
+                    const parentNode = buildTreeNodeHTML(parentName);
+                    branchRow.appendChild(parentNode);
+
+                    // Create the structural connector tracking box
+                    const connectorWrapper = document.createElement('div');
+                    connectorWrapper.className = 'line-connector-wrapper';
+
+                    const spine = document.createElement('div');
+                    spine.className = 'spine-line';
+
+                    const horizon = document.createElement('div');
+                    horizon.className = 'horizontal-line';
+
+                    connectorWrapper.appendChild(spine);
+                    connectorWrapper.appendChild(horizon);
+                    branchRow.appendChild(connectorWrapper);
+
+                    parentsContainer.appendChild(branchRow);
+                });
+
+                nodeElement.appendChild(parentsContainer);
+            }
+
+            // Target Node Box Label (If it's an ingredient on the far left, add an entry stub line)
+            if (!isRootNode && (!itemData.parents || itemData.parents.length === 0)) {
+                const entryLine = document.createElement('div');
+                entryLine.className = 'horizontal-line';
+                entryLine.style.width = '20px';
+                entryLine.style.flexGrow = '0';
+                nodeElement.appendChild(entryLine);
+            }
+
+            const label = document.createElement('div');
+            label.className = `node-label ${isRootNode ? 'active-node' : ''}`;
+            label.textContent = capitalize(itemName);
+            nodeElement.appendChild(label);
+
+            return nodeElement;
+        }
+
+        function generateTree(itemKey) {
+            emptyMsg.style.display = 'none';
+            treeRoot.innerHTML = '';
+
+            const dynamicTreeHTML = buildTreeNodeHTML(itemKey, true);
+            treeRoot.appendChild(dynamicTreeHTML);
+        }
+
+        function toggleMenu() {
+            const nav = document.getElementById('sideNav');
+            const overlay = document.getElementById('overlay');
+            const btn = document.querySelector('.menu-toggle');
+            nav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            btn.innerHTML = nav.classList.contains('active') ? '✕' : '☰';
+        }
+    </script>
+</body>
+
+</html>
