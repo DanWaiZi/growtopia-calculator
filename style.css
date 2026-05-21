@@ -493,28 +493,29 @@ button {
         /* Force align everything to the left */
     }
 
-    /* 2. Fix the individual link alignment */
     .nav-link {
-        width: 100% !important;
-        display: flex !important;
+        display: flex;
         align-items: center;
-        /* Vertical center the icon and text */
-        justify-content: flex-start !important;
-        /* Horizontal left align */
-        padding: 12px 20px !important;
-        /* Give them consistent space */
-        text-align: left !important;
-        gap: 15px;
-        /* Adds a clean gap between the icon and text */
+        /* Centers the icon and text perfectly on the horizontal axis */
+        gap: 12px;
+        /* Keeps a stable, clean space between the icon and the text */
+        padding: 10px 15px;
+        color: #cbd5e1;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s;
     }
 
-    /* 3. Make sure icons have a consistent width so text stays lined up */
-    .nav-link img,
-    .nav-link i {
+    /* Ensure the navbar link icons have a fixed block width so the text starts at the exact same position */
+    .nav-link i,
+    .nav-link img {
         width: 24px;
-        text-align: center;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex-shrink: 0;
-        /* Prevents icons from squishing */
+        /* Prevents the icons from squishing when space is tight */
     }
 }
 
